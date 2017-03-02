@@ -6,8 +6,19 @@
 $Name = $_GET['Name'];
 $Comment = $_GET['Comment'];
 $Ra = $_GET['Raws'];
+if (empty($Ra )) {
+  $Ra=[];
+}
+
 $Ma = $_GET['Masters'];
+
+
+if (empty($Ma )) {
+  $Ma=[];
+}
 $Type = $_GET['Type'];
+
+echo $Type;
 
 
 

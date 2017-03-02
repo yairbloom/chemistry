@@ -1,5 +1,5 @@
 <form id=<?php echo $MatiralFormName ?> action="SaveToDB.php" method="GET">
-  <input type='hidden' name='Type' value=<?php echo $MatiralType ?>/> 
+  <input type='hidden' name='Type' value=<?php echo $MatiralType ?> > 
   <div class="container">
   <br>
   <br>
