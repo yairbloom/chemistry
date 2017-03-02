@@ -40,6 +40,12 @@ mysqli_close($con);
 
         </select>
         <br> 
+	<h3> Comments: </h3>
+	<textarea rows="4" cols="100" name="Comment">
+	Please enter your comment here.
+	</textarea>
+        <br> 
+
 	<input type="button" onclick="myFunction()" value="Submit">
         </div>
 <br>

@@ -18,9 +18,9 @@ if (empty($Ma )) {
 }
 $Type = $_GET['Type'];
 
-echo $Type;
 
 
+include('Menu.html');
 
 
 
@@ -31,14 +31,17 @@ if (!$con) {
 
 mysqli_select_db($con,"chemistry");
 $sql="INSERT INTO Materials (Name,Comment,Type,Available) VALUES('".$Name."','".$Comment."','".$Type."',1)";
-echo $sql;
 $result = mysqli_query($con,$sql);
 foreach(array_merge($Ra,$Ma) as $item) {
 	$sql="INSERT INTO MaterialsRecipe (Material1,Material2) VALUES('".$Name."','".$item."')";
 	$result = mysqli_query($con,$sql);
 }
 mysqli_close($con);
+
+printf("<script >document.getElementById(\"BoDy\").innerHTML = \"<h1>%s %s is saved successfully</h1>\"</script>",$Name , $Type);
+
 ?>
+
 </body>
 </html>
 

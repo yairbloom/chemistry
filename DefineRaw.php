@@ -5,6 +5,8 @@ $MatiralFormName = 'RawForm';
 include 'DefineHeader.php';
 ?>
 
+<p id="BoDy"></p>
+
   <input type="button" onclick="myFunction()" value="Submit">
 </form> 
 

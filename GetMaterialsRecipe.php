@@ -32,7 +32,7 @@ $Material = $_GET['Material'];
     printf ("<input type='hidden' name='TotalMaterials' value=%d>",mysqli_num_rows($result)); 
     $Count = 1;
     while($row = mysqli_fetch_array($result , MYSQLI_NUM)){   
-	    printf ("<input type='hidden' name='RecipeId_%d' value=%d>",$row[0],$row[1]); 
+	    printf ("<input type='hidden' name='RecipeId_%d' value=%d>",$Count,$row[1]); 
 	    printf("<div class='floating-box'>"); 
 	    printf("<div style='display: inline-block' align='center'> <h5 style='margin: 10px'>%s</h5> </div>", $row[0]); 
 	    printf("<div style='display: inline-block' align='center'> <select name='Rsn_%d'>",$Count);
