@@ -16,8 +16,8 @@
 
 <?php
 $Material = $_GET['Material'];
-
-    $con = mysqli_connect('localhost','chem','mistry','chemistry');
+$SERIAL = $_GET['SERIAL'];
+   $con = mysqli_connect('localhost','chem','mistry','chemistry');
     if (!$con) { 
 	    die('Could not connect: ' . mysql_error()); 
     } 
@@ -46,6 +46,12 @@ $Material = $_GET['Material'];
             $Count = $Count +1;
     }
 mysqli_close($con);
+   $INCLUDE = 'Production_'.$_GET['Type'].'.php';
+    include $INCLUDE;;
+    echo "
+            <script> document.getElementById(\"SerialId\").innerHTML = $SERIAL   </script>
+         ";
+ 
 
 ?>
 

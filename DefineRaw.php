@@ -16,6 +16,7 @@ function myFunction() {
 }
 </script>
 
+</div>
 
 </body>
 </html>

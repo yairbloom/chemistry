@@ -12,7 +12,7 @@ h4,h1 , .wrap {
 <form id=ProductionForm action="SaveProductionData.php" method="GET">
     <div class='wrap'> 
             <h4 align="center" style="margin-top: 2em;">Select <?php echo $_GET['Type'] ?> Material</h4>
-            <select id="Mat" Name="MatName" align="center" method="GET" onchange="SelectFunction(this.value)" placeholder="Select Material ..."  >
+            <select id="Mat" Name="MatName" align="center" method="GET" onchange="SelectFunction(this.value);" placeholder="Select Material ..."  >
 <?php
 
 $Type = $_GET['Type'];
@@ -39,6 +39,11 @@ mysqli_close($con);
 ?>
 
         </select>
+	<br> 
+	<h3> Serial Id: </h3>
+	<textarea rows="1" cols="16" text-align='center' name="SerialId" id="SerialId">
+	</textarea>
+
         <br> 
 	<h3> Comments: </h3>
 	<textarea rows="4" cols="100" name="Comment">
@@ -61,11 +66,12 @@ function myFunction() {
     document.getElementById("ProductionForm").submit();
 }
 
-function SelectFunction(str) {
+function SelectFunction(str ) {
+       type = "<?php echo $_GET['Type'];?>";
        $.ajax({
         url: 'GetMaterialsRecipe.php',
         type: 'GET',
-        data: {Material : str},
+        data: {Material:str , Type:type },
         success: function(result) {
             console.log("Data sent!");
             $("#demo").html(result);

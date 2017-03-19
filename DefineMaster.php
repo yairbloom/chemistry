@@ -4,21 +4,17 @@ $MatiralType = 'Master';
 $MatiralFormName = 'MasterForm';
 include 'DefineHeader.php';
 ?>
+  </div>
 
   <div class="container">
-    <div class="row">
 <?php
 $SBMatiralType = 'Raw';
-$MatiralColSizeType = 'col-sm-3';
 
 
 include 'ImpSelectBoxOption.php';
 ?>
   <br>
   <br>
-  <br>
-  <div class="col-sm-3">
-    <div class="row">
     <input type="button" onclick="myFunction()" value="Submit">
   </div>
 </form> 
