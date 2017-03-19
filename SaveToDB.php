@@ -46,7 +46,7 @@ foreach(array_merge($Ra,$Ma) as $item) {
 }
 mysqli_close($con);
 
-printf("<script >document.getElementById(\"BoDy\").innerHTML = \"<h1>%s %s is saved successfully valaaa %d</h1>\"</script>",$Name , $Type , $groupTypeName);
+printf("<script >document.getElementById(\"BoDy\").innerHTML = \"<h1>%s %s is saved successfully</h1>\"</script>",$Name , $Type );
 
 ?>
 

@@ -26,6 +26,7 @@ if ($row = mysqli_fetch_array($result , MYSQLI_NUM)){
 
 }
 
+mysqli_close($con);
 $SERIAL=json_encode($SERIAL_PREF);
 
 ?>
