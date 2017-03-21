@@ -1,0 +1,118 @@
+-- MySQL dump 10.14  Distrib 5.5.43-MariaDB, for Linux (x86_64)
+--
+-- Host: localhost    Database: chemistry
+-- ------------------------------------------------------
+-- Server version	5.5.43-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `FormulationGroup`
+--
+
+DROP TABLE IF EXISTS `FormulationGroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FormulationGroup` (
+  `Id` int(11) NOT NULL DEFAULT '0',
+  `Name` text,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `FormulationNameToGroup`
+--
+
+DROP TABLE IF EXISTS `FormulationNameToGroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `FormulationNameToGroup` (
+  `Name` varchar(40) NOT NULL,
+  `Id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `Materials`
+--
+
+DROP TABLE IF EXISTS `Materials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Materials` (
+  `Name` varchar(40) NOT NULL,
+  `Comment` text,
+  `Type` enum('Raw','Master','Formulation') DEFAULT NULL,
+  `Available` int(1) DEFAULT NULL,
+  PRIMARY KEY (`Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `MaterialsRecipe`
+--
+
+DROP TABLE IF EXISTS `MaterialsRecipe`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `MaterialsRecipe` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Material1` varchar(40) DEFAULT NULL,
+  `Material2` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=915 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ProductionMaterials`
+--
+
+DROP TABLE IF EXISTS `ProductionMaterials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProductionMaterials` (
+  `Name` varchar(40) NOT NULL,
+  `SerialNumber` varchar(16) NOT NULL DEFAULT '',
+  `Comment` text,
+  PRIMARY KEY (`Name`,`SerialNumber`),
+  CONSTRAINT `ProductionMaterials_ibfk_1` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `ProductionRecipe`
+--
+
+DROP TABLE IF EXISTS `ProductionRecipe`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProductionRecipe` (
+  `Id` int(11) NOT NULL DEFAULT '0',
+  `Material1SN` int(11) NOT NULL DEFAULT '0',
+  `Material2SN` int(11) NOT NULL DEFAULT '0',
+  `Available` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`Id`,`Material1SN`,`Material2SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2017-03-21 17:43:49
