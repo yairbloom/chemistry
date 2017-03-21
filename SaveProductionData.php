@@ -19,6 +19,14 @@ mysqli_select_db($con,"chemistry");
 $sql="INSERT INTO ProductionMaterials (Name,SerialNumber,Comment) VALUES('".$MatName."','".$SerialId."','".$Comment."')";
 $result = mysqli_query($con,$sql);
 
+printf("<script > what(); function what(){");
+if ($result === TRUE)
+	printf("document.getElementById(\"BoDy\").innerHTML = \"<h1>Production instance of %s is Saved and got serial number: %s</h1>\"" , $MatName , $SerialId);
+else
+         printf("document.getElementById(\"BoDy\").innerHTML = \"<h1> Error on saving Production instance of %s %s</h1>\"", $MatName , mysql_error($con ));
+printf("};</script >");
+
+
 
 for ($x = 1; $x <= $TotalMaterials; $x++) {
     eval("\$Rsn = \$_GET[\"Rsn_$x\"];");
@@ -29,13 +37,6 @@ for ($x = 1; $x <= $TotalMaterials; $x++) {
 }
 
 mysqli_close($con);
-
-printf("<script > what(); function what(){");
-if ($result === TRUE)
-	printf("document.getElementById(\"BoDy\").innerHTML = \"<h1>Production instance of %s is Saved and got serial number: %s</h1>\"" , $MatName , $SerialId);
-else
-         printf("document.getElementById(\"BoDy\").innerHTML = \"<h1> Error on saving Production instance of %s</h1>\"", $MatName );
-printf("};</script >");
 
 
 ?>

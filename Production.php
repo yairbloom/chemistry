@@ -45,6 +45,19 @@ mysqli_close($con);
 	</textarea>
 
         <br> 
+	<h3> Quantity: </h3>
+        <table align="center" style="width:10%">
+        <tr>
+        <th><input type="number" name="quantity" value="0" min="0" Max="10000"></th>
+        <th><select id="quantity_type" placeholder="Milligram" >
+        <option value=1>Milligram</option>
+        <option value=2 >Milliliter</option>
+        </select>
+	</th>
+        </tr>
+        </table>
+        <br> 
+
 	<h3> Comments: </h3>
 	<textarea rows="4" cols="100" name="Comment">
 	Please enter your comment here.
