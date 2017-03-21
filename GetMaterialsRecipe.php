@@ -3,55 +3,99 @@
 <body>
 
 <style>
-.floating-box {
-      display: inline-block;
-      width: 150px;
-      height: 75px;
-      margin: 10px;
-      border: 3px solid #73AD21;  
+table.Serialtable {
+	border-collapse: collapse;
+width: 100%;
 }
 
-</style>
+th.Serialtable, td.Serialtable {
+	text-align: center;
+padding: 8px;
+}
 
+tr.Serialtable:nth-child(even){background-color: #f2f2f2}
+
+th.Serialtable {
+	background-color: #4CAF50;
+color: white;
+}
+</style>
 
 <?php
 $Material = $_GET['Material'];
 $SERIAL = $_GET['SERIAL'];
-   $con = mysqli_connect('localhost','chem','mistry','chemistry');
-    if (!$con) { 
-	    die('Could not connect: ' . mysql_error()); 
-    } 
-    // select database
-    mysqli_select_db($con,"chemistry");
-    // fire mysql query
 
-    $sql="SELECT Material2,Id from  MaterialsRecipe where Material1='".$Material."'";
-    $result = mysqli_query($con,$sql);
-    // play with return result array 
-    $str1 ="";
-    printf ("<input type='hidden' name='TotalMaterials' value=%d>",mysqli_num_rows($result)); 
-    $Count = 1;
-    while($row = mysqli_fetch_array($result , MYSQLI_NUM)){   
-	    printf ("<input type='hidden' name='RecipeId_%d' value=%d>",$Count,$row[1]); 
-	    printf("<div class='floating-box'>"); 
-	    printf("<div style='display: inline-block' align='center'> <h5 style='margin: 10px'>%s</h5> </div>", $row[0]); 
-	    printf("<div style='display: inline-block' align='center'> <select name='Rsn_%d'>",$Count);
-            $sql="select SerialNumber from ProductionMaterials where name='".$row[0]."'";
-	    $result2 = mysqli_query($con,$sql);
-	    while($row2 = mysqli_fetch_array($result2 , MYSQLI_NUM)){   
-              printf("<option>%s</option>", $row2[0]);
-            }
-            printf("</select> </div>");
-            printf("</div>");
-            $Count = $Count +1;
-    }
+
+echo "<script> document.getElementById(\"SaveTheProdaction\").disabled = false   </script>";
+$con = mysqli_connect('localhost','chem','mistry','chemistry');
+if (!$con) { 
+	die('Could not connect: ' . mysql_error()); 
+} 
+// select database
+mysqli_select_db($con,"chemistry");
+// fire mysql query
+
+//$sql="SELECT Material2,Id from  MaterialsRecipe where Material1='".$Material."'";
+$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Raw' and A.Material2=B.Name",$Material);
+$result1 = mysqli_query($con,$sql);
+$RawSize = mysqli_num_rows($result1);
+
+$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Master' and A.Material2=B.Name",$Material);
+$result2 = mysqli_query($con,$sql);
+$MasterSize = mysqli_num_rows($result2);
+
+$MaxS =  max($RawSize , $MasterSize);
+printf ("<input type='hidden' name='TotalMaterials' value=%d>",$MasterSize+$RawSize); 
+if ($MaxS>0) {
+	// play with return result array 
+	$Count = 1;
+	printf("<table class='Serialtable' align='center'>");
+        printf("<tr class='Serialtable'>");
+        if ($RawSize > 0)
+		printf("<th class='Serialtable'>Raw</th><th class='Serialtable'>Serial<br>Number</th>");
+        if ($MasterSize > 0)
+		printf("<th class='Serialtable'>Master</th><th class='Serialtable'>Serial<br>Number</th>");
+        printf("</tr>");
+        
+
+
+        for ($index = 0; $index < $MaxS; $index++) {
+		printf("<tr class='Serialtable'>");
+                foreach (array($result1 , $result2) as &$result) {
+		if ($row = mysqli_fetch_array($result , MYSQLI_NUM)){   
+			printf ("<input type='hidden' name='RecipeId_%d' value=%d>",$Count,$row[1]); 
+			printf("<td class='Serialtable'>%s</td>", $row[0]); 
+
+			$sql="select SerialNumber from ProductionMaterials where name='".$row[0]."'";
+			$result3 = mysqli_query($con,$sql);
+			if (mysqli_num_rows($result3)>0) {
+				printf("<td class='Serialtable'><select name='Rsn_%d'>",$Count);
+				while($row2 = mysqli_fetch_array($result3 , MYSQLI_NUM)){   
+					printf("<option>%s</option>", $row2[0]);
+				}
+			}
+
+			else {
+				printf("<td class='Serialtable'>%s</td>", "Not exist please define it."); 
+				echo "<script> document.getElementById(\"SaveTheProdaction\").disabled = true   </script>";
+			}
+			printf("</select>");
+			printf("</td>");
+
+		}
+		else if (mysqli_num_rows($result)) 
+			printf("<td class='Serialtable'></td><td class='Serialtable'></td>"); 
+		$Count = $Count +1;
+                }
+		printf("</tr>");
+	}
+	printf("</table>");
+}
 mysqli_close($con);
-   $INCLUDE = 'Production_'.$_GET['Type'].'.php';
-    include $INCLUDE;;
-    echo "
-            <script> document.getElementById(\"SerialId\").innerHTML = $SERIAL   </script>
-         ";
- 
+$INCLUDE = 'Production_'.$_GET['Type'].'.php';
+include $INCLUDE;;
+echo "<script> document.getElementById(\"SerialId\").innerHTML = $SERIAL   </script>";
+
 
 ?>
 

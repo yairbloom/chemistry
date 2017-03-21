@@ -64,8 +64,6 @@ mysqli_close($con);
 	</textarea>
         <br> 
 
-	<input type="button" onclick="myFunction()" value="Submit">
-        </div>
 <br>
 <p id="demo"></p>
 
@@ -96,5 +94,7 @@ function SelectFunction(str ) {
 
 </script>
 
+<input id="SaveTheProdaction" type="button" onclick="myFunction()" value="Submit">
+</div>
 </body>
 </html>
