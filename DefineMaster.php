@@ -6,7 +6,6 @@ include 'DefineHeader.php';
 ?>
   </div>
 
-  <div class="container">
 <?php
 $SBMatiralType = 'Raw';
 

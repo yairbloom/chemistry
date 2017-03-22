@@ -1,18 +1,18 @@
  <?php include('Menu.html'); ?>
 <style>
 h4,h1 , .wrap {
-    text-align: center;
+    text-align: left;
 }
 
 </style>
-   <h1 id="h11"> Define <?php echo $_GET['Type'] ?> Production Material </h1>
+   <h1 id="h11" style="margin-left: 1em"> Define <?php echo $_GET['Type'] ?> Production Material </h1>
   <br>
   <br>
   <br>
-<form id=ProductionForm action="SaveProductionData.php" method="GET">
+<form id=ProductionForm action="SaveProductionData.php" method="GET" style="margin-left: 2em">
     <div class='wrap'> 
-            <h4 align="center" style="margin-top: 2em;">Select <?php echo $_GET['Type'] ?> Material</h4>
-            <select id="Mat" Name="MatName" align="center" method="GET" onchange="SelectFunction(this.value);" placeholder="Select Material ..."  >
+            <h3 align="left">Select <?php echo $_GET['Type'] ?> Material</h3>
+            <select id="Mat" Name="MatName" align="left" method="GET" onchange="SelectFunction(this.value);" placeholder="Select Material ..."  >
 <?php
 
 $Type = $_GET['Type'];
@@ -41,12 +41,12 @@ mysqli_close($con);
         </select>
 	<br> 
 	<h3> Serial Id: </h3>
-	<textarea rows="1" cols="16" text-align='center' name="SerialId" id="SerialId">
+	<textarea rows="1" cols="16" text-align='left' name="SerialId" id="SerialId">
 	</textarea>
 
         <br> 
 	<h3> Quantity: </h3>
-        <table align="center" style="width:10%">
+        <table align="left" style="width:10%">
         <tr>
         <th><input type="number" name="quantity" value="0" min="0" Max="10000"></th>
         <th><select id="quantity_type" placeholder="Milligram" >

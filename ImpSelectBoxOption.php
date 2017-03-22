@@ -1,7 +1,7 @@
 
 
   <div style='display: inline-block'> 
-  <h4 style="width:68px;height: 1px"><?php echo 'Unselected '.$SBMatiralType ?></h4>
+  <h4 style="width:68px;height: 1px"><?php echo 'Available '.$SBMatiralType ?></h4>
   <select id=<?php echo 'Unselected'.$SBMatiralType ?>  style="height: 200px;width:140px" multiple="multiple" >
 
 

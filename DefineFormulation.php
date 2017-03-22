@@ -4,7 +4,7 @@ $MatiralType = 'Formulation';
 $MatiralFormName = 'FormulationForm';
 include 'DefineHeader.php';
 ?>
-<h3> <?php echo $MatiralType ?> Group: </h3>
+<h3> <?php echo $MatiralType ?> Type: </h3>
 <select id="GroupType" Name="GroupTypeName" align="center" method="GET" placeholder="Select Material type..."  >
 <?php
 
@@ -36,7 +36,6 @@ mysqli_close($con);
 
   </div>
 
-  <div class="container">
     <div class="row">
 <?php
 $SBMatiralType = 'Raw';
