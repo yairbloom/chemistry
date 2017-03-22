@@ -5,7 +5,7 @@ h4,h1 , .wrap {
 }
 
 </style>
-   <h1 id="h11"> Define <?php echo $_GET['Type'] ?> prodaction Material </h1>
+   <h1 id="h11"> Define <?php echo $_GET['Type'] ?> Production Material </h1>
   <br>
   <br>
   <br>
