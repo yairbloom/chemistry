@@ -2,6 +2,7 @@
  <?php
 $MatiralType = 'Raw';
 $MatiralFormName = 'RawForm';
+$TheHeadline = 'Add Raw Matiral';
 include 'DefineHeader.php';
 ?>
 

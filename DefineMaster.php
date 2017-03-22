@@ -2,6 +2,7 @@
  <?php
 $MatiralType = 'Master';
 $MatiralFormName = 'MasterForm';
+$TheHeadline = 'Define Master Matiral';
 include 'DefineHeader.php';
 ?>
   </div>
