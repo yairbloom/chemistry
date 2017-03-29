@@ -2,7 +2,7 @@
  <?php
 $MatiralType = 'Raw';
 $MatiralFormName = 'RawForm';
-$TheHeadline = 'Add Raw Matiral';
+$TheHeadline = 'Add Raw Material';
 include 'DefineHeader.php';
 ?>
 

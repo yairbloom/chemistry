@@ -16,7 +16,7 @@ padding: 8px;
 tr.Serialtable:nth-child(even){background-color: #f2f2f2}
 
 th.Serialtable {
-	background-color: #4CAF50;
+	background-color: gray;
 color: white;
 }
 </style>

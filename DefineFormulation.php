@@ -2,7 +2,7 @@
  <?php
 $MatiralType = 'Formulation';
 $MatiralFormName = 'FormulationForm';
-$TheHeadline = 'Define Formulation Matiral';
+$TheHeadline = 'Define Formulation Material';
 include 'DefineHeader.php';
 ?>
 <h3> <?php echo $MatiralType ?> Type: </h3>

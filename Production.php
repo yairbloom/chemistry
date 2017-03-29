@@ -50,10 +50,10 @@ mysqli_close($con);
 	<h3> Quantity: </h3>
         <table align="left" style="width:10%">
         <tr>
-        <th><input type="number" name="quantity" value="0" min="0" Max="10000"></th>
-        <th><select id="quantity_type" placeholder="Milligram" >
-        <option value=1>Milligram</option>
-        <option value=2 >Milliliter</option>
+        <th><input type="number" step="0.01" name="quantity" value="0" min="0" Max="100"></th>
+        <th><select id="quantity_type" placeholder="Gram" >
+        <option value=1>Gram</option>
+        <option value=2 >Liter</option>
         </select>
 	</th>
         </tr>
