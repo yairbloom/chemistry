@@ -5,6 +5,7 @@ $MatiralFormName = 'FormulationForm';
 $TheHeadline = 'Define Formulation Material';
 include 'DefineHeader.php';
 ?>
+
 <h3> <?php echo $MatiralType ?> Type: </h3>
 <select id="GroupType" Name="GroupTypeName" align="center" method="GET" placeholder="Select Material type..."  >
 <?php
@@ -37,13 +38,12 @@ mysqli_close($con);
 
   </div>
 
-    <div class="row">
 <?php
 $SBMatiralType = 'Raw';
 
 
 include 'ImpSelectBoxOption.php';
-for ($x = 0; $x <= 70; $x++) {
+for ($x = 0; $x <= 50; $x++) {
     echo "&nbsp;";
 } 
 ?>

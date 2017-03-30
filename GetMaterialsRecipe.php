@@ -5,7 +5,8 @@
 <style>
 table.Serialtable {
 	border-collapse: collapse;
-width: 100%;
+        border=1;
+width: 43.4%;
 }
 
 th.Serialtable, td.Serialtable {
@@ -17,7 +18,11 @@ tr.Serialtable:nth-child(even){background-color: #f2f2f2}
 
 th.Serialtable {
 	background-color: gray;
-color: white;
+        color: white;
+}
+
+select.Serialtable {
+        width: 150px;
 }
 </style>
 
@@ -47,9 +52,11 @@ $MasterSize = mysqli_num_rows($result2);
 $MaxS =  max($RawSize , $MasterSize);
 printf ("<input type='hidden' name='TotalMaterials' value=%d>",$MasterSize+$RawSize); 
 if ($MaxS>0) {
+
+	printf("<h3> Recipe: </h3>");
 	// play with return result array 
 	$Count = 1;
-	printf("<table class='Serialtable' align='center'>");
+	printf("<table class='Serialtable'>");
         printf("<tr class='Serialtable'>");
         if ($RawSize > 0)
 		printf("<th class='Serialtable'>Raw</th><th class='Serialtable'>Serial<br>Number</th>");
@@ -69,7 +76,7 @@ if ($MaxS>0) {
 			$sql="select SerialNumber from ProductionMaterials where name='".$row[0]."'";
 			$result3 = mysqli_query($con,$sql);
 			if (mysqli_num_rows($result3)>0) {
-				printf("<td class='Serialtable'><select name='Rsn_%d'>",$Count);
+				printf("<td class='Serialtable'><select class='Serialtable' name='Rsn_%d' ' >",$Count);
 				while($row2 = mysqli_fetch_array($result3 , MYSQLI_NUM)){   
 					printf("<option>%s</option>", $row2[0]);
 				}
@@ -100,4 +107,7 @@ echo "<script> document.getElementById(\"SerialId\").innerHTML = $SERIAL   </scr
 ?>
 
 </body>
+<br>
+<br>
+<br>
 </html>

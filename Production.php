@@ -8,11 +8,7 @@ h4,h1 , .wrap {
 
 
    <h1 id="h11" style="margin-left: 1em"> <?php echo $_GET['TheHeadline'] ?> </h1>
-  <br>
-  <br>
-  <br>
 <form id=ProductionForm action="SaveProductionData.php" method="GET" style="margin-left: 2em">
-    <div class='wrap'> 
             <h3 align="left">Select <?php echo $_GET['Type'] ?> Material</h3>
             <select id="Mat" Name="MatName" align="left" method="GET" onchange="SelectFunction(this.value);" placeholder="Select Material ..."  >
 <?php
@@ -41,17 +37,15 @@ mysqli_close($con);
 ?>
 
         </select>
-	<br> 
 	<h3> Serial Id: </h3>
 	<textarea rows="1" cols="16" text-align='left' name="SerialId" id="SerialId">
 	</textarea>
 
-        <br> 
 	<h3> Quantity: </h3>
         <table align="left" style="width:10%">
         <tr>
-        <th><input type="number" step="0.01" name="quantity" value="0" min="0" Max="100"></th>
-        <th><select id="quantity_type" placeholder="Gram" >
+        <th style="font-weight:normal;"><input type="number" step="0.01" name="quantity" value="0" min="0" Max="100"></th>
+        <th style="font-weight:normal;"><select id="quantity_type">
         <option value=1>Gram</option>
         <option value=2 >Liter</option>
         </select>
@@ -65,10 +59,11 @@ mysqli_close($con);
 	Please enter your comment here.
 	</textarea>
         <br> 
-
-<br>
+<div>
 <p id="demo"></p>
+</div>
 
+<input id="SaveTheProdaction" type="button" onclick="myFunction()" value="Submit">
 
 </form> 
 <script>
@@ -96,7 +91,5 @@ function SelectFunction(str ) {
 
 </script>
 
-<input id="SaveTheProdaction" type="button" onclick="myFunction()" value="Submit">
-</div>
 </body>
 </html>
