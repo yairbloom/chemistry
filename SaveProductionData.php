@@ -31,7 +31,7 @@ printf("};</script >");
 for ($x = 1; $x <= $TotalMaterials; $x++) {
     eval("\$Rsn = \$_GET[\"Rsn_$x\"];");
     eval("\$RecipeId = \$_GET[\"RecipeId_$x\"];");
-    $sql="INSERT INTO ProductionRecipe (Id , Material1SN , Material2SN) VALUES(".$RecipeId.",".$row[0].",".$Rsn.")";
+    $sql="INSERT INTO ProductionRecipe (Id , Material1SN , Material2SN) VALUES(".$RecipeId.",'".$SerialId."','".$Rsn."')";
     echo "<br>";
     $result = mysqli_query($con,$sql);
 }

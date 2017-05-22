@@ -38,13 +38,13 @@ echo $selectBoxOption;
  </div>
   <div style='display: inline-block'> 
     <h4><?php echo 'Selected '.$SBMatiralType ?></h4>
-  <select  id=<?php echo "Selected".$SBMatiralType ?>  multiple="multiple"    style="height: 200px;width:140px;margin-left:50px" name=<?php echo $SBMatiralType.'s[]' ?> >
+  <select  id=<?php echo "Selected".$SBMatiralType ?>  multiple="multiple"    style="height: 200px;width:140px;" name=<?php echo $SBMatiralType.'s[]' ?> >
   </Select>
  </div>
   <br>
   <input type="button" id=<?php echo $SBMatiralType."Left" ?>  value="  <  " style="width:68px" />
    <input type="button" id=<?php echo $SBMatiralType."Right" ?> value="  >  " style="width:68px"/>
-   <input type="button" id=<?php echo $SBMatiralType."LeftAll" ?> value=" << " style="width:68px;margin-left:50px"/>
+   <input type="button" id=<?php echo $SBMatiralType."LeftAll" ?> value=" << " style="width:68px;"/>
    <input type="button" id=<?php echo $SBMatiralType."RightAll" ?> value=" >> " style="width:68px"/>
 
   </div>
