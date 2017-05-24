@@ -45,9 +45,9 @@ mysqli_close($con);
         <table align="left" style="width:10%">
         <tr>
         <th style="font-weight:normal;"><input type="number" step="0.01" name="quantity" value="0" min="0" Max="100"></th>
-        <th style="font-weight:normal;"><select id="quantity_type">
-        <option value=1>Gram</option>
-        <option value=2 >Liter</option>
+        <th style="font-weight:normal;"><select name="quantity_type">
+        <option value='1'>Gram</option>
+        <option value='2'>Liter</option>
         </select>
 	</th>
         </tr>

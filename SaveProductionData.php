@@ -7,6 +7,9 @@ $MatName = $_GET['MatName'];
 $TotalMaterials = $_GET['TotalMaterials'];
 $Comment = $_GET['Comment'];
 $SerialId = $_GET['SerialId'];
+$QuantityType = $_GET['quantity_type'];
+$Quantity = $_GET['quantity'];
+
 
 include('Menu.html');
 
@@ -16,7 +19,7 @@ if (!$con) {
 }
 
 mysqli_select_db($con,"chemistry");
-$sql="INSERT INTO ProductionMaterials (Name,SerialNumber,Comment) VALUES('".$MatName."','".$SerialId."','".$Comment."')";
+$sql="INSERT INTO ProductionMaterials (Name,SerialNumber,Comment,Quantity,QuantityType) VALUES('".$MatName."','".$SerialId."','".$Comment."',".$Quantity.",".$QuantityType.")";
 $result = mysqli_query($con,$sql);
 
 printf("<script > what(); function what(){");
