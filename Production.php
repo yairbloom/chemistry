@@ -17,13 +17,13 @@ $Type = $_GET['Type'];
 // select box option tag
 
 // connect mysql server
-$con = mysqli_connect('localhost','chem','mistry','chemistry');
+$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
 if (!$con) { 
     die('Could not connect: ' . mysql_error()); 
 } 
 $selectBoxOption="";
 // select database
-mysqli_select_db($con,"chemistry");
+mysqli_select_db($con,"ChemistryTest");
 // fire mysql query
 
 $sql="SELECT Name from  Materials where Type=\"$Type\"";

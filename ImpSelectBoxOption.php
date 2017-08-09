@@ -15,13 +15,13 @@ div {
 // select box option tag
 
 // connect mysql server
-$con = mysqli_connect('localhost','chem','mistry','chemistry');
+$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
 if (!$con) { 
     die('Could not connect: ' . mysql_error()); 
 } 
 $selectBoxOption="";
 // select database
-mysqli_select_db($con,"chemistry");
+mysqli_select_db($con,"ChemistryTest");
 // fire mysql query
 
 $sql="SELECT Name from  Materials where Type=\"$SBMatiralType\"";
@@ -39,6 +39,7 @@ echo $selectBoxOption;
   <div style='display: inline-block'> 
     <h4><?php echo 'Selected '.$SBMatiralType ?></h4>
   <select  id=<?php echo "Selected".$SBMatiralType ?>  multiple="multiple"    style="height: 200px;width:140px;" name=<?php echo $SBMatiralType.'s[]' ?> >
+   <option>8</option>
   </Select>
  </div>
   <br>

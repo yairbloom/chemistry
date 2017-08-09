@@ -13,12 +13,12 @@ $Quantity = $_GET['quantity'];
 
 include('Menu.html');
 
-$con = mysqli_connect('localhost','chem','mistry','chemistry');
+$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
 if (!$con) {
     die('Could not connect: ' . mysqli_error($con));
 }
 
-mysqli_select_db($con,"chemistry");
+mysqli_select_db($con,"ChemistryTest");
 $sql="INSERT INTO ProductionMaterials (Name,SerialNumber,Comment,Quantity,QuantityType) VALUES('".$MatName."','".$SerialId."','".$Comment."',".$Quantity.",".$QuantityType.")";
 $result = mysqli_query($con,$sql);
 
