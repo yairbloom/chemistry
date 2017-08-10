@@ -1,4 +1,3 @@
-
 <style>
 div {
     vertical-align: text-bottom;
@@ -39,7 +38,6 @@ echo $selectBoxOption;
   <div style='display: inline-block'> 
     <h4><?php echo 'Selected '.$SBMatiralType ?></h4>
   <select  id=<?php echo "Selected".$SBMatiralType ?>  multiple="multiple"    style="height: 200px;width:140px;" name=<?php echo $SBMatiralType.'s[]' ?> >
-   <option>8</option>
   </Select>
  </div>
   <br>
