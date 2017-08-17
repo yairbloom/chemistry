@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>ns
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -15,9 +15,11 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+<script src="Material.js"></script>
 <script>
     $(function(){
       $("#MenuContent").load("Menu.html");
+      $("#ActionsContent").load("Actions.html");
     });
     </script>
 </head>
@@ -25,7 +27,6 @@
 
 
 <body>
-<div w3-include-html="Menu.html"></div>
 <div id="MenuContent"></div>
 <div class="container">
 	<div class="row">
@@ -38,24 +39,7 @@
                 
               <table id="mytable" class="table table-bordred table-striped">
                    
-                   <thead>
-                                   
-                    <th>Formulation Name</th>
-                    <th>Formulation Type</th>
-                    <th>Masters</th>
-                    <th>Raws</th>
-                    <th>Comment</th>
-                    <th>Edit By</th>
-                    <th>Last Edit</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                    <th>Prodaction</th>
-                    <th>New</th>
-                   </thead>
-    <tbody>
-    </tbody>
-        
-</table>
+                  </table>
 
 
                 
@@ -65,90 +49,30 @@
 	</div>
 </div>
 
-
-<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                <h4 class="modal-title custom_align" id="Heading">Modificar tabla Atributos</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <input class="form-control " type="text" placeholder="Ingrese Descripcion">
-                </div>
-                <div class="form-group">
-                    <input class="form-control " type="text" placeholder="Ingrese Precio">
-                </div>
-                <div class="form-group">
-                    <textarea rows="2" class="form-control" placeholder="aqui va el select"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer ">
-                <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Actualizar</button>
-            </div>
-        </div>
-    <!-- /.modal-content --> 
-    </div>
-      <!-- /.modal-dialog --> 
-</div>
-    
-    
-    
-    <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-      <div class="modal-dialog">
-    <div class="modal-content">
-          <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-        <h4 class="modal-title custom_align" id="Heading">Eliminacion de Registrosy</h4>
-      </div>
-          <div class="modal-body">
-       
-       <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Esta ud seguro de eliminar el registro?</div>
-       
-      </div>
-        <div class="modal-footer ">
-        <button type="button" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span>Si</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>No</button>
-      </div>
-        </div>
-    <!-- /.modal-content --> 
-  </div>
-      <!-- /.modal-dialog --> 
-    </div>
-
-    <div class="modal fade" id="instance" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-      <div class="modal-dialog">
-    <div class="modal-content">
-          <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-        <h4 class="modal-title custom_align" id="Heading">Eliminacion de Registrosy</h4>
-      </div>
-          <div class="modal-body">
-       
-       <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Esta ud seguro de eliminar el registro?</div>
-       
-      </div>
-        <div class="modal-footer ">
-        <button type="button" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span>Si</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>No</button>
-      </div>
-        </div>
-    <!-- /.modal-content --> 
-  </div>
-      <!-- /.modal-dialog --> 
-    </div>
-<p id="demo"></p>
-
-
+<div id="ActionsContent"></div>
 <script>
 $(document).ready(function(){
+	//msgM();
 	$.ajax({
             type : "GET",
             url : "GetMaterials.php?SBMatiralType=Formulation",
 		success : function(response) {
                 var jsonObject = JSON.parse(response);
 	        var x ;
+			$('#mytable').append('<thead>' +
+				'<th>Formulation Name</th>' +
+				'<th>Formulation Type</th>' +
+				'<th>Masters</th>' +
+				'<th>Raws</th>' +
+				'<th>Comment</th>'+
+				'<th>Edit By</th>' +
+				'<th>Last Edit</th>' +
+				'<th>Edit</th>' +
+				'<th>Delete</th>' +
+				'<th>Prodaction</th>' +
+				'<th>New</th>'+
+				'</thead>');
+        
                 for (x in jsonObject) {
 			var txt='<tr><td>';
 			Now = new Date($.now());
@@ -164,6 +88,7 @@ $(document).ready(function(){
 				MasterStr+=delimiter +  jsonObject[x].Master[i];
 				delimiter=",";
 			}
+
 
 			txt += jsonObject[x].Name;
 			txt += '</td><td>';
