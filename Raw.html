@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
-    <title>Formulation</title>
+    <title>Raws</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
@@ -31,7 +31,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-		<h2 style="font-weight: bold;text-align: center">Formulation</h1> <br>
+		<h2 style="font-weight: bold;text-align: center">Raw</h1> <br>
         <div class="table-responsive">
            <table id="mytable" class="table table-bordred table-striped"></table>
         </div>
@@ -45,9 +45,9 @@ $(document).ready(function(){
 	//msgM();
 	$.ajax({
             type : "GET",
-            url : "GetMaterials.php?SBMatiralType=Formulation&GroupType=yes&Master=yes&Raw=yes",
+            url : "GetMaterials.php?SBMatiralType=Raw",
 		success : function(response) {
-		             PrintTable(response , true ,true , true);
+		             PrintTable(response , false , false , false);
               	          }
         });
 });
