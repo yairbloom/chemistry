@@ -66,7 +66,7 @@ function PrintTable(response , FType , Masters , Raws){
 			txt += Now.getHours() + ":" + Now.getMinutes() + ":" + Now.getSeconds();
 			txt += '</td>';
 			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" id="llaa"><span class="glyphicon glyphicon-pencil"></span></button></p></td>';
-			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" data-toggle="modal" data-target="#delete" data-yourparameter=' + jsonObject[x].Name + '><span class="glyphicon glyphicon-trash"></span></button></p></td>';
+			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#delete"  data-yourparameter=' + jsonObject[x].Name + '><span class="glyphicon glyphicon-trash"></span></button></p></td>';
 			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Prodaction"><button class="btn btn-success btn-xs" data-title="Prodaction" data-toggle="modal" data-target="#instance" ><span class="glyphicon glyphicon-filter"></span></button></p></td>';
 
 			txt += '<td></td>';
@@ -85,6 +85,10 @@ function PrintTable(response , FType , Masters , Raws){
                                       '<td></td>' + 
                                       '<td><p data-placement="top" data-toggle="tooltip" title="New"><button class="btn btn btn-xs" data-title="New" data-toggle="modal" data-target="#new" ><span class="glyphicon glyphicon-plus"></span></button></p></td>' +
                                       '</tr>');
+
+        $(".mybtn-delete").click(function(){
+		$("#MyDelSpan").text("   Delete " + $(this).attr("data-yourparameter") + ". Are you sure?");
+         })
 
 }  
 
