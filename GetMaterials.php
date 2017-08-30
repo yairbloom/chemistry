@@ -7,7 +7,7 @@ if (!$con) {
 
 
 $SBMatiralType = $_GET['SBMatiralType'];
-$FormulationsList=[];
+$Matirals->MatList=[];
 
 // select database
 mysqli_select_db($con,"ChemistryTest");
@@ -50,9 +50,18 @@ foreach ($outp as $value)
 			$index++;
 		}
 	}
-	array_push($FormulationsList,$value);
+	array_push($Matirals->MatList,$value);
 }
-$FList =  json_encode($FormulationsList);
+if(!empty($_GET["GroupType"]))
+{
+	$sql="SELECT GroupType,Id from  FormulationGroup";
+	$GroupTypeResult = mysqli_query($con,$sql);
+	$Matirals->GroupType = array();
+	$Matirals->GroupType = $GroupTypeResult->fetch_all(MYSQLI_ASSOC);
+
+}
+
+$FList =  json_encode($Matirals);
 echo $FList;
 
 ?>

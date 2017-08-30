@@ -1,5 +1,6 @@
 function PrintTable(response , FType , Masters , Raws){  
-  var jsonObject = JSON.parse(response);
+  var MatiralsJson = JSON.parse(response);
+  var MatList = MatiralsJson.MatList;
 	var x ;
 	var theadStr =  '<thead><th>Name</th>';
 	if (FType)
@@ -12,14 +13,23 @@ function PrintTable(response , FType , Masters , Raws){
 		'<th>Comment</th>'+
 		'<th>Edit By</th>' +
 		'<th>Last Edit</th>' +
-		'<th>Edit</th>' +
-		'<th>Delete</th>' +
-		'<th>Prodaction</th>' +
+		'<th>Actions</th>' +
 		'<th>New</th>'+
 		'</thead>';
 	$('#mytable').append(theadStr);
         
-                for (x in jsonObject) {
+	        var NewItemRow='<tr><td>';
+	        if (FType) 
+		  NewItemRow+='</td><td>';
+	        if (Raws) 
+		  NewItemRow+='</td><td>';
+	        if (Masters) 
+		  NewItemRow+='</td><td>';
+	        NewItemRow+='<td></td><td></td><td></td><td></td><td><p data-placement="top" data-toggle="tooltip" title="New">';
+	        NewItemRow+='<button class="btn btn btn-xs mybtn-new" data-title="New" data-toggle="modal" data-target="#NewMatiral" ><span class="glyphicon glyphicon-plus"></span></button></p></td></tr>';
+	         $('#mytable').append(NewItemRow);
+
+                for (x in MatList) {
 			var txt='<tr><td>';
 			Now = new Date($.now());
 			RawStr="";
@@ -28,25 +38,25 @@ function PrintTable(response , FType , Masters , Raws){
 			if (Raws)
 			{
 				delimiter="";
-				for (i in jsonObject[x].Raw) {
-					RawStr+=delimiter + jsonObject[x].Raw[i];
+				for (i in MatList[x].Raw) {
+					RawStr+=delimiter + MatList[x].Raw[i];
 					delimiter=",";
 				}
 			}
 			if (Masters)
 			{
 				delimiter="";
-				for (i in jsonObject[x].Master) {
-					MasterStr+=delimiter +  jsonObject[x].Master[i];
+				for (i in MatList[x].Master) {
+					MasterStr+=delimiter +  MatList[x].Master[i];
 					delimiter=",";
 				}
 			}
 
-			txt += jsonObject[x].Name;
+			txt += MatList[x].Name;
 			txt += '</td><td>';
 			if (FType)
 			{
-				txt += jsonObject[x].GroupType;
+				txt += MatList[x].GroupType;
 				txt += '</td><td>';
 			}
 			if (Masters)
@@ -59,36 +69,43 @@ function PrintTable(response , FType , Masters , Raws){
 				txt += RawStr;
 				txt += '</td><td>';
 			}
-			txt += jsonObject[x].Comment;
+			txt += MatList[x].Comment;
 			txt += '</td><td>';
 			txt += "Yair";
 			txt += '</td><td>';
 			txt += Now.getHours() + ":" + Now.getMinutes() + ":" + Now.getSeconds();
 			txt += '</td>';
-			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" id="llaa"><span class="glyphicon glyphicon-pencil"></span></button></p></td>';
-			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#delete"  data-yourparameter=' + jsonObject[x].Name + '><span class="glyphicon glyphicon-trash"></span></button></p></td>';
-			txt += '<td><p data-placement="top" data-toggle="tooltip" title="Prodaction"><button class="btn btn-success btn-xs" data-title="Prodaction" data-toggle="modal" data-target="#instance" ><span class="glyphicon glyphicon-filter"></span></button></p></td>';
-
+			txt += '<td><div class="btn-group">';
+		        txt += '<button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" data-placement="top" data-toggle="tooltip" title="Edit">';
+			txt += '<span class="glyphicon glyphicon-pencil"></span></button>';
+			txt += '<button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#delete"  data-yourparameter=';
+			txt += MatList[x].Name; 
+			txt += ' data-placement="top" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>';
+			txt += '<button class="btn btn-success btn-xs" data-title="Prodaction" data-toggle="modal" data-target="#Prodaction" data-placement="top" data-toggle="tooltip" title="Prodaction">';
+			txt += '<span class="glyphicon glyphicon-filter"></span></button></td>';
 			txt += '<td></td>';
 			$('#mytable').append(txt);
                  }
-	         $('#mytable').append(' <tr>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td></td>' + 
-                                      '<td><p data-placement="top" data-toggle="tooltip" title="New"><button class="btn btn btn-xs" data-title="New" data-toggle="modal" data-target="#new" ><span class="glyphicon glyphicon-plus"></span></button></p></td>' +
-                                      '</tr>');
 
         $(".mybtn-delete").click(function(){
-		$("#MyDelSpan").text("   Delete " + $(this).attr("data-yourparameter") + ". Are you sure?");
+		$("#MyDelSpan").html("    Are you sure you want to delete  " + $(this).attr("data-yourparameter") + " item ?");
+		$("#DelSpanHeadline").text("Deleting  " + $(this).attr("data-yourparameter"));
          })
+	$(".mybtn-new").click(function(){
+		if (!FType)
+			return;
+		var GroupType = MatiralsJson.GroupType;
+		var OptionList =''; 
+		$("#GroupsTypeDiv").removeClass('hidden');
+		$("#MasterDiv").removeClass('hidden');
+
+		OptionList+='<option value=""></option>';
+                for (x in GroupType) {
+			        OptionList+='<option>' + GroupType[x].GroupType + '</option>';
+		}
+		$("#GroupsTypeSelect").html(OptionList);
+		$("#MasterSelect").html(OptionList);
+	})
 
 }  
 
