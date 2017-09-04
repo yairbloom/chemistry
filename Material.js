@@ -1,3 +1,4 @@
+
 function PrintTable(response , FType , Masters , Raws){  
   var MatiralsJson = JSON.parse(response);
   var MatList = MatiralsJson.MatList;
@@ -92,29 +93,32 @@ function PrintTable(response , FType , Masters , Raws){
 		$("#DelSpanHeadline").text("Deleting  " + $(this).attr("data-yourparameter"));
          })
 	$(".mybtn-new").click(function(){
-		if (!FType)
-			return;
 		var GroupType = MatiralsJson.GroupType;
 		var MasterOptions = MatiralsJson.MasterOptions;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
-		$("#GroupsTypeDiv").removeClass('hidden');
-		$("#MasterDiv").removeClass('hidden');
-		$("#RawDiv").removeClass('hidden');
 
-
-		for (x in GroupType) {
-			OptionList+='<option>' + GroupType[x].GroupType + '</option>';
+		if (FType) {
+			$("#GroupsTypeDiv").removeClass('hidden');
+			for (x in GroupType) 
+				OptionList+='<option>' + GroupType[x].GroupType + '</option>';
+			$("#GroupsTypeSelect").html(OptionList);
 		}
-		$("#GroupsTypeSelect").html(OptionList);
+                if (Masters) {
+			$("#MasterDiv").removeClass('hidden');
+			for (x in MasterOptions) 
+				$("#MasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
+			$("#MasterSelect").trigger("chosen:updated");
+		}
+		if (Raws) {
+			$("#RawDiv").removeClass('hidden');
+			for (x in RawOptions) 
+				$("#RawSelect").append('<option>' + RawOptions[x].Name + '</option>');
+			$("#RawSelect").trigger("chosen:updated");
+		}
 
-		for (x in MasterOptions) 
-			$("#MasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
-		$("#MasterSelect").trigger("chosen:updated");
 
-		for (x in RawOptions) 
-			$("#RawSelect").append('<option>' + RawOptions[x].Name + '</option>');
-		$("#RawSelect").trigger("chosen:updated");
+
 	})
 
 }  
