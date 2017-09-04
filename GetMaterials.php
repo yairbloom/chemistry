@@ -60,6 +60,24 @@ if(!empty($_GET["GroupType"]))
 	$Matirals->GroupType = $GroupTypeResult->fetch_all(MYSQLI_ASSOC);
 
 }
+if(!empty($_GET["Master"]))
+{
+	$sql="SELECT Name FROM  Materials where Type='Master'";
+	$Result = mysqli_query($con,$sql);
+	$Matirals->MasterOptions = array();
+	$Matirals->MasterOptions = $Result->fetch_all(MYSQLI_ASSOC);
+}
+
+if(!empty($_GET["Raw"]))
+{
+	$sql="SELECT Name FROM  Materials where Type='Raw'";
+	$Result = mysqli_query($con,$sql);
+	$Matirals->RawOptions = array();
+	$Matirals->RawOptions = $Result->fetch_all(MYSQLI_ASSOC);
+}
+
+
+
 
 $FList =  json_encode($Matirals);
 echo $FList;

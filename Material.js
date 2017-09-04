@@ -13,7 +13,7 @@ function PrintTable(response , FType , Masters , Raws){
 		'<th>Comment</th>'+
 		'<th>Edit By</th>' +
 		'<th>Last Edit</th>' +
-		'<th>Actions</th>' +
+		'<th>Matiral Actions</th>' +
 		'<th>New</th>'+
 		'</thead>';
 	$('#mytable').append(theadStr);
@@ -95,16 +95,26 @@ function PrintTable(response , FType , Masters , Raws){
 		if (!FType)
 			return;
 		var GroupType = MatiralsJson.GroupType;
+		var MasterOptions = MatiralsJson.MasterOptions;
+		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
 		$("#GroupsTypeDiv").removeClass('hidden');
 		$("#MasterDiv").removeClass('hidden');
+		$("#RawDiv").removeClass('hidden');
 
-		OptionList+='<option value=""></option>';
-                for (x in GroupType) {
-			        OptionList+='<option>' + GroupType[x].GroupType + '</option>';
+
+		for (x in GroupType) {
+			OptionList+='<option>' + GroupType[x].GroupType + '</option>';
 		}
 		$("#GroupsTypeSelect").html(OptionList);
-		$("#MasterSelect").html(OptionList);
+
+		for (x in MasterOptions) 
+			$("#MasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
+		$("#MasterSelect").trigger("chosen:updated");
+
+		for (x in RawOptions) 
+			$("#RawSelect").append('<option>' + RawOptions[x].Name + '</option>');
+		$("#RawSelect").trigger("chosen:updated");
 	})
 
 }  
