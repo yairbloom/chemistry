@@ -1,5 +1,5 @@
 
-function PrintTable(response , FType , Masters , Raws){  
+function PrintTable(response , FType , Masters , Raws , MatiralType){  
   var MatiralsJson = JSON.parse(response);
   var MatList = MatiralsJson.MatList;
 	var x ;
@@ -32,7 +32,6 @@ function PrintTable(response , FType , Masters , Raws){
 
                 for (x in MatList) {
 			var txt='<tr><td>';
-			Now = new Date($.now());
 			RawStr="";
 			MasterStr="";
 
@@ -74,13 +73,12 @@ function PrintTable(response , FType , Masters , Raws){
 			txt += '</td><td>';
 			txt += "Yair";
 			txt += '</td><td>';
-			txt += Now.getHours() + ":" + Now.getMinutes() + ":" + Now.getSeconds();
+			txt += MatList[x].LastModify;
 			txt += '</td>';
 			txt += '<td><div class="btn-group">';
-		        txt += '<button class="btn btn-primary btn-xs" data-title="Edit" data-toggle="modal" data-target="#edit" data-placement="top" data-toggle="tooltip" title="Edit">';
+		        txt += '<button class="btn btn-primary btn-xs mybtn-edit" data-title="Edit" data-toggle="modal" data-target="#EditMatiral" data-placement="top" data-toggle="tooltip" title="Edit">';
 			txt += '<span class="glyphicon glyphicon-pencil"></span></button>';
-			txt += '<button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#delete"  data-yourparameter=';
-			txt += MatList[x].Name; 
+			txt += '<button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#DeleteMatiral"';
 			txt += ' data-placement="top" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>';
 			txt += '<button class="btn btn-success btn-xs" data-title="Prodaction" data-toggle="modal" data-target="#Prodaction" data-placement="top" data-toggle="tooltip" title="Prodaction">';
 			txt += '<span class="glyphicon glyphicon-filter"></span></button></td>';
@@ -89,33 +87,94 @@ function PrintTable(response , FType , Masters , Raws){
                  }
 
         $(".mybtn-delete").click(function(){
-		$("#MyDelSpan").html("    Are you sure you want to delete  " + $(this).attr("data-yourparameter") + " item ?");
-		$("#DelSpanHeadline").text("Deleting  " + $(this).attr("data-yourparameter"));
+
+		var MatiralName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
+ 		$("#MyDelSpan").html("    Are you sure you want to delete  " + MatiralName);
+		$("#DelSpanHeadline").text("Deleting  " + MatiralName);
+		$("#DeleteMatiral").attr("data-MatiralName" , MatiralName);
          })
 	$(".mybtn-new").click(function(){
 		var GroupType = MatiralsJson.GroupType;
 		var MasterOptions = MatiralsJson.MasterOptions;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
+		$("#NewMatiralHeading").text('New '+ $("#MenuContent").attr("data-Matiral-type"));
 
 		if (FType) {
-			$("#GroupsTypeDiv").removeClass('hidden');
+			$("#NewGroupsTypeDiv").removeClass('hidden');
 			for (x in GroupType) 
-				OptionList+='<option>' + GroupType[x].GroupType + '</option>';
-			$("#GroupsTypeSelect").html(OptionList);
+				OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
+			$("#NewGroupsTypeSelect").html(OptionList);
 		}
                 if (Masters) {
-			$("#MasterDiv").removeClass('hidden');
+			$("#NewMasterDiv").removeClass('hidden');
+			$("#NewMasterSelect").val('');
 			for (x in MasterOptions) 
-				$("#MasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
-			$("#MasterSelect").trigger("chosen:updated");
+				$("#NewMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
+			$("#NewMasterSelect").trigger("chosen:updated");
 		}
 		if (Raws) {
-			$("#RawDiv").removeClass('hidden');
+			$("#NewRawDiv").removeClass('hidden');
+			$("#NewRawSelect").val('');
 			for (x in RawOptions) 
-				$("#RawSelect").append('<option>' + RawOptions[x].Name + '</option>');
-			$("#RawSelect").trigger("chosen:updated");
+				$("#NewRawSelect").append('<option>' + RawOptions[x].Name + '</option>');
+			$("#NewRawSelect").trigger("chosen:updated");
 		}
+
+	})
+	$(".mybtn-edit").click(function(){
+		var GroupType = MatiralsJson.GroupType;
+		var MasterOptions = MatiralsJson.MasterOptions;
+		var RawOptions = MatiralsJson.RawOptions;
+		var OptionList =''; 
+		var OldName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
+		var CurrentGroupType = $(this).parentsUntil("tr").parent().find("td:eq(1)").text();
+		var CurrentMasterList = $(this).parentsUntil("tr").parent().find("td:eq(2)").text().split(',');
+		var CurrentRawList = $(this).parentsUntil("tr").parent().find("td:eq(3)").text().split(',');
+		var CurrentComment = $(this).parentsUntil("tr").parent().find("td:eq(4)").text();
+
+		$("#EditMatiral").attr("data-MatiralName" , OldName);
+		$("#EditMatiralHeading").text('Edit '+ OldName);
+		$("#EditMatiralName").val(OldName);
+		$("#EditMatiralComments").val(CurrentComment);
+
+		if (FType) {
+			$("#EditGroupsTypeDiv").removeClass('hidden');
+			for (x in GroupType) 
+			{
+				if (CurrentGroupType == GroupType[x].GroupType)
+					OptionList+='<option value=' +  GroupType[x].Id + ' selected>' + GroupType[x].GroupType + '</option>';
+				else
+					OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
+			}
+			$("#EditGroupsTypeSelect").html(OptionList);
+		}
+                if (Masters) {
+			$("#EditMasterDiv").removeClass('hidden');
+			$("#EditMasterSelect").val('');
+			for (x in MasterOptions) 
+			{
+				if(jQuery.inArray(MasterOptions[x].Name, CurrentMasterList) !== -1)
+					$("#EditMasterSelect").append('<option selected>' + MasterOptions[x].Name + '</option>');
+				else
+					$("#EditMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
+			}
+			$("#EditMasterSelect").trigger("chosen:updated");
+		}
+		if (Raws) {
+			$("#EditRawDiv").removeClass('hidden');
+			$("#EditRawSelect").val('');
+			for (x in RawOptions) 
+			{
+				if(jQuery.inArray(RawOptions[x].Name, CurrentRawList) !== -1)
+					$("#EditRawSelect").append('<option selected>' + RawOptions[x].Name + '</option>');
+				else
+					$("#EditRawSelect").append('<option>' + RawOptions[x].Name + '</option>');
+			}
+			$("#EditRawSelect").trigger("chosen:updated");
+		}
+
+
 
 
 

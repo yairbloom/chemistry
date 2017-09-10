@@ -1,55 +1,145 @@
 <style>
+
+.modal-title {
+	text-align: center !important;
+}
+
 .form-horizontal .control-label {
-  text-align: left !important; /* !important added for priority in SO snippet. */
+	text-align: left !important; /* !important added for priority in SO snippet. */
 }
 
 .chosen-container .chosen-select {
-    width: 100% !important; /* or any value that fits your needs */
+	width: 100% !important; /* or any value that fits your needs */
 }
+
 </style>
 
 <script>
 $(document).ready(function() {
-    $("#MasterSelect").chosen( { width: '100%' } );
-    $("#RawSelect").chosen( { width: '100%' } );
+    $("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
+    $(".SaveNewMatirial").click(function(){
+	    $.ajax({
+		    type : "GET",
+		    url : "SaveNewMatiral.php",
+		    data: {Name: $("#NewMatiralName").val(), 
+			   Comment: $("#NewMatiralComments").val(), 
+			   MastersList: $("#NewMasterSelect").val() , 
+			   RawsList: $("#NewRawSelect").val() , 
+			   GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
+			   MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+		    success : function(response) {
+			    setTimeout(function()
+				    {
+					    location.reload();  //Refresh page
+				    }, 1000);
+		    }
+	    });
+    });
+
+    $(".SaveEditedMatirial").click(function(){
+	    $.ajax({
+		    type : "GET",
+		    url : "SaveEditedMatirial.php",
+		    data: {OldName: $("#EditMatiral").attr("data-MatiralName"),
+			   NewName: $("#EditMatiralName").val(), 
+			   Comment: $("#EditMatiralComments").val(), 
+			   MastersList: $("#EditMasterSelect").val() , 
+			   RawsList: $("#EditRawSelect").val() , 
+			   GroupTypeName: $("#EditGroupsTypeSelect").val()  , 
+			   MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+		    success : function(response) {
+			    setTimeout(function()
+				    {
+					    location.reload();  //Refresh page
+				    }, 1000);
+		    }
+	    });
+    });
+
+
+
+  $(".DeleteMatiral").click(function(){
+	  $.ajax({
+		  type : "GET",
+		  url : "DeleteMatiral.php",
+		  data: {MatiralName: $("#DeleteMatiral").attr("data-MatiralName") },
+		    success : function(response) {
+			    setTimeout(function()
+				    {
+					    location.reload();  //Refresh page
+				    }, 1000);
+		    }
+	    });
+
+
+  });
+
 });
 </script>
 
 
 
       <!-------------------------- edit    --------------------------> 
+    <div class="modal fade" id="EditMatiral" data-MatiralName='' tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+      <div class="modal-dialog">
+    <div class="modal-content">
+          <div class="modal-header">    <h4 class="modal-title custom_align" id="EditMatiralHeading">Edit</h4>   </div>
+          <div class="modal-body">
+              <div class="alert alert-info">
+	         <form class="form-horizontal">
+                     <div class="form-group" >
+			<label class="control-label col-sm-2" >Name:</label>
+                        <div class="col-sm-10">
+	                    <input type="text" class="form-control" id="EditMatiralName" placeholder="Enter Name" name="MatName">
+                        </div>
+		        <div id="EditGroupsTypeDiv" class="hidden">
+			    <label class="control-label col-sm-2" >Type:</label>
+			    <div class="col-sm-10" >
+		                <select class="form-control" id="EditGroupsTypeSelect">
+			        </select>
+			    </div>
+			</div>
 
-<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-                <h4 class="modal-title custom_align" id="Heading">Modificar tabla Atributos</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <input class="form-control " type="text" placeholder="Ingrese Descripcion">
-                </div>
-                <div class="form-group">
-                    <input class="form-control " type="text" placeholder="Ingrese Precio">
-                </div>
-                <div class="form-group">
-                    <textarea rows="2" class="form-control" placeholder="aqui va el select"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer ">
-                <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Actualizar</button>
-            </div>
+			<div id="EditMasterDiv" class="hidden">
+			    <label class="control-label col-sm-2" >Master :</label>
+			    <div class="col-sm-10 container">
+                               <select  class="chosen-select" data-placeholder="Select Master Matirals" multiple=true tabindex="6" id="EditMasterSelect"></select>
+			    </div>
+			</div>
+
+
+			<div id="EditRawDiv" class="hidden">
+			    <label class="control-label col-sm-2" >Raw :</label>
+			    <div class="col-sm-10 container">
+                               <select  class="chosen-select" data-placeholder="Select Raw Matirals" multiple=true tabindex="6" id="EditRawSelect"></select>
+			    </div>
+			</div>
+
+
+
+			<label class="control-label col-sm-2" >Comments:</label>
+                        <div class="col-sm-10">
+	                    <input type="textarea" class="form-control" id="EditMatiralComments" placeholder="Enter Comment" name="MatComment">
+                       </div>
+
+                     </div>
+                 </form>
+              </div>
+    <!-- /.modal-budy --> 
+      </div>
+        <div class="modal-footer ">
+        <button type="button" class="btn btn-success SaveEditedMatirial" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
+      </div>
         </div>
     <!-- /.modal-content --> 
-    </div>
+  </div>
       <!-- /.modal-dialog --> 
-</div>
-    
+    </div>
     
       <!-------------------------- Delete    --------------------------> 
     
-    <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+    <div class="modal fade" id="DeleteMatiral" data-MatiralName='' tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
       <div class="modal-dialog">
     <div class="modal-content">
           <div class="modal-header">
@@ -61,7 +151,7 @@ $(document).ready(function() {
        
       </div>
         <div class="modal-footer ">
-        <button type="button" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span>Yes</button>
+        <button type="button" class="btn btn-success DeleteMatiral" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Yes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>No</button>
       </div>
         </div>
@@ -97,35 +187,35 @@ $(document).ready(function() {
     <div class="modal fade" id="NewMatiral" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
       <div class="modal-dialog">
     <div class="modal-content">
-          <div class="modal-header">    <h4 class="modal-title custom_align" id="Heading">New</h4>   </div>
+          <div class="modal-header">    <h4 class="modal-title custom_align" id="NewMatiralHeading">New</h4>   </div>
           <div class="modal-body">
               <div class="alert alert-info">
 	         <form class="form-horizontal">
                      <div class="form-group" >
 			<label class="control-label col-sm-2" >Name:</label>
                         <div class="col-sm-10">
-	                    <input type="text" class="form-control" id="pwd" placeholder="Enter Name" name="MatName">
+	                    <input type="text" class="form-control" id="NewMatiralName" placeholder="Enter Name" name="MatName">
                         </div>
-		        <div id="GroupsTypeDiv" class="hidden">
+		        <div id="NewGroupsTypeDiv" class="hidden">
 			    <label class="control-label col-sm-2" >Type:</label>
 			    <div class="col-sm-10" >
-		                <select class="form-control" id="GroupsTypeSelect">
+		                <select class="form-control" id="NewGroupsTypeSelect">
 			        </select>
 			    </div>
 			</div>
 
-			<div id="MasterDiv" class="hidden">
+			<div id="NewMasterDiv" class="hidden">
 			    <label class="control-label col-sm-2" >Master :</label>
 			    <div class="col-sm-10 container">
-                               <select  class="chosen-select" data-placeholder="Select Master Matirals" multiple=true tabindex="6" id="MasterSelect"></select>
+                               <select  class="chosen-select" data-placeholder="Select Master Matirals" multiple=true tabindex="6" id="NewMasterSelect"></select>
 			    </div>
 			</div>
 
 
-			<div id="RawDiv" class="hidden">
+			<div id="NewRawDiv" class="hidden">
 			    <label class="control-label col-sm-2" >Raw :</label>
 			    <div class="col-sm-10 container">
-                               <select  class="chosen-select" data-placeholder="Select Raw Matirals" multiple=true tabindex="6" id="RawSelect"></select>
+                               <select  class="chosen-select" data-placeholder="Select Raw Matirals" multiple=true tabindex="6" id="NewRawSelect"></select>
 			    </div>
 			</div>
 
@@ -133,7 +223,7 @@ $(document).ready(function() {
 
 			<label class="control-label col-sm-2" >Comments:</label>
                         <div class="col-sm-10">
-	                    <input type="textarea" class="form-control" id="Comments" placeholder="Enter Comment" name="MatComment">
+	                    <input type="textarea" class="form-control" id="NewMatiralComments" placeholder="Enter Comment" name="MatComment">
                        </div>
 
                      </div>
@@ -142,7 +232,7 @@ $(document).ready(function() {
     <!-- /.modal-budy --> 
       </div>
         <div class="modal-footer ">
-        <button type="button" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+        <button type="button" class="btn btn-success SaveNewMatirial" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
       </div>
         </div>
