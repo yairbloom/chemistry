@@ -35,7 +35,7 @@
 <div id="MenuContent" data-Matiral-type="Master"></div>
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" id="MainDiv" data-MatiralType="Master">
 		<h2 style="font-weight: bold;text-align: center">Master</h1> <br>
         <div class="table-responsive">
            <table id="mytable" class="table table-bordred table-striped"></table>
@@ -47,7 +47,6 @@
 <div id="ActionsContent"></div>
 <script>
 $(document).ready(function(){
-	//msgM();
 	$.ajax({
             type : "GET",
             url : "GetMaterials.php?SBMatiralType=Master&Raw=yes",
