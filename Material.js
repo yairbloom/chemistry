@@ -1,5 +1,4 @@
-function PrintTable(response , FType , Masters , Raws , MatiralType){  
-  var MatiralsJson = JSON.parse(response);
+function LoadMainTable(MatiralsJson , FType , Masters , Raws ){  
   var MatList = MatiralsJson.MatList;
 	var x ;
 	var theadStr =  '<thead><th>Name</th>';
@@ -85,29 +84,47 @@ function PrintTable(response , FType , Masters , Raws , MatiralType){
 			$('#mytable').append(txt);
                  }
 
-        $(".mybtn-delete").click(function(){
+}  
+
+
+function LoadMainTableActionDelete(){  
+	$(".mybtn-delete").click(function(){
 
 		var MatiralName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
- 		$("#MyDelSpan").html("    Are you sure you want to delete  " + MatiralName);
+		$("#MyDelSpan").html("    Are you sure you want to delete  " + MatiralName);
 		$("#DelSpanHeadline").text("Deleting  " + MatiralName);
 		$("#DeleteMatiral").attr("data-MatiralName" , MatiralName);
-         })
+
+		$("#SaveDeleteMatiral").off('click').on('click' , function(){
+			$.ajax({
+				type : "GET",
+				url : "DeleteMatiral.php",
+				data: {MatiralName: $("#DeleteMatiral").attr("data-MatiralName") },
+				success : function(response) {
+					setTimeout(function()
+						{
+							location.reload();  //Refresh page
+						}, 1000);
+				}
+			});
+
+
+		});
+
+	})
+}
+
+function LoadMainTableActionNew(MatiralsJson ,  Masters , Raws ){  
 
 	$(".mybtn-new").click(function(){
-		var GroupType = MatiralsJson.GroupType;
 		var MasterOptions = MatiralsJson.MasterOptions;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
 		$("#NewMatiralHeading").text('New '+ $("#MenuContent").attr("data-Matiral-type"));
 
-		if (FType) {
-			$("#NewGroupsTypeDiv").removeClass('hidden');
-			for (x in GroupType) 
-				OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
-			$("#NewGroupsTypeSelect").html(OptionList);
-		}
                 if (Masters) {
 			$("#NewMasterDiv").removeClass('hidden');
+			$("#NewMasterSelect").attr("data-placeholder","Select Master Matirals");
 			$("#NewMasterSelect").val('');
 			for (x in MasterOptions) 
 				$("#NewMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
@@ -121,34 +138,50 @@ function PrintTable(response , FType , Masters , Raws , MatiralType){
 			$("#NewRawSelect").trigger("chosen:updated");
 		}
 
+		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
+		$("#IdSaveNewMatirial").off('click').on('click' , function(){
+
+			$.ajax({
+				type : "GET",
+				url : "SaveNewMatiral.php",
+				data: {Name: $("#NewMatiralName").val(), 
+					Comment: $("#NewMatiralComments").val(), 
+					MastersList: $("#NewMasterSelect").val() , 
+					RawsList: $("#NewRawSelect").val() , 
+					GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
+					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+				success : function(response) {
+					setTimeout(function()
+						{
+							location.reload();  //Refresh page
+						}, 1000);
+				}
+			});
+
+
+
+		});
+
 	})
+}
+
+
+
+function LoadMainTableActionEdit(MatiralsJson ,  Masters , Raws ){  
+
 	$(".mybtn-edit").click(function(){
-		var GroupType = MatiralsJson.GroupType;
-		var MasterOptions = MatiralsJson.MasterOptions;
 		var RawOptions = MatiralsJson.RawOptions;
-		var OptionList =''; 
 		var OldName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
-		var CurrentGroupType = $(this).parentsUntil("tr").parent().find("td:eq(1)").text();
 		var CurrentMasterList = $(this).parentsUntil("tr").parent().find("td:eq(2)").text().split(',');
 		var CurrentRawList = $(this).parentsUntil("tr").parent().find("td:eq(3)").text().split(',');
 		var CurrentComment = $(this).parentsUntil("tr").parent().find("td:eq(4)").text();
+		var MasterOptions = MatiralsJson.MasterOptions;
 
 		$("#EditMatiral").attr("data-MatiralName" , OldName);
 		$("#EditMatiralHeading").text('Edit '+ OldName);
 		$("#EditMatiralName").val(OldName);
 		$("#EditMatiralComments").val(CurrentComment);
 
-		if (FType) {
-			$("#EditGroupsTypeDiv").removeClass('hidden');
-			for (x in GroupType) 
-			{
-				if (CurrentGroupType == GroupType[x].GroupType)
-					OptionList+='<option value=' +  GroupType[x].Id + ' selected>' + GroupType[x].GroupType + '</option>';
-				else
-					OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
-			}
-			$("#EditGroupsTypeSelect").html(OptionList);
-		}
                 if (Masters) {
 			$("#EditMasterDiv").removeClass('hidden');
 			$("#EditMasterSelect").val('');
@@ -175,10 +208,52 @@ function PrintTable(response , FType , Masters , Raws , MatiralType){
 		}
 
 
+		$("#EditRawSelect,#EditMasterSelect").chosen( { width: '100%' } );
+		$("#SaveEditedMatirial").off('click').on('click' , function(){
+			$.ajax({
+				type : "GET",
+				url : "SaveEditedMatirial.php",
+				data: {OldName: $("#EditMatiral").attr("data-MatiralName"),
+					NewName: $("#EditMatiralName").val(), 
+					Comment: $("#EditMatiralComments").val(), 
+					MastersList: $("#EditMasterSelect").val() , 
+					RawsList: $("#EditRawSelect").val() , 
+					GroupTypeName: $("#EditGroupsTypeSelect").val()  , 
+					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+				success : function(response) {
+					setTimeout(function()
+						{
+							location.reload();  //Refresh page
+						}, 1000);
+				}
+			});
+
+
+		});
 
 
 
 	})
+}
+
+function LoadFormulationGroupType(MatiralsJson , Prefix){  
+	var SelectionDivHtml = '<label class="control-label col-sm-2" >Type:</label><div class="col-sm-10" ><select class="form-control" id="' + Prefix+ 'GroupsTypeSelect"> </select></div>';
+	var GroupType = MatiralsJson.GroupType;
+	var CurrentGroupType = $(this).parentsUntil("tr").parent().find("td:eq(1)").text();
+	var OptionList =''; 
+	$("#" + Prefix + "SelectionDiv").removeClass('hidden');
+	$("#" + Prefix + "SelectionDiv").html(SelectionDivHtml);
+	for (x in GroupType) 
+	{
+		if (CurrentGroupType == GroupType[x].GroupType)
+			OptionList+='<option value=' +  GroupType[x].Id + ' selected>' + GroupType[x].GroupType + '</option>';
+		else
+			OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
+	}
+	$("#" + Prefix + "GroupsTypeSelect").html(OptionList);
+}
+
+function LoadMainTableActionProduction(){  
 
       $(".mybtn-prodaction").click(function(){
 	      var MatiralName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
@@ -186,13 +261,13 @@ function PrintTable(response , FType , Masters , Raws , MatiralType){
 	      $("#MainDiv").attr("data-MatiralName" , MatiralName);
 	      $("#MyHeadline").text(MatiralType + ": " + MatiralName);
 	      $("#mytable").load("Production.html");
+	      $("#ActionsContent").load("ProductionActions.html");
 
          })
-}  
+}
 
 
-function PrintProductionTable(response , Raws , Masters){  
-  var PJson = JSON.parse(response);
+function LoadProductionTable(PJson , Raws , Masters){  
 	var x ;
 	var theadStr =  '<thead><th>SerialId</th>';
 	if (Masters)
@@ -214,7 +289,8 @@ function PrintProductionTable(response , Raws , Masters){
 	        if (Masters) 
 		  NewItemRow+='</td><td>';
 	        NewItemRow+='<td></td><td></td><td></td><td></td><td></td><td><p data-placement="top" data-toggle="tooltip" title="New">';
-	        NewItemRow+='<button class="btn btn btn-xs mybtn-new" data-title="New" data-toggle="modal" data-target="#NewMatiral" ><span class="glyphicon glyphicon-plus"></span></button></p></td></tr>';
+	        NewItemRow+='<button class="btn btn btn-xs mybtn-new" data-title="New" data-toggle="modal" data-target="#NewMatiral" >';
+	        NewItemRow+='<span class="glyphicon glyphicon-plus"></span></button></p></td></tr>';
 	         $('#mytable').append(NewItemRow);
 
                 for (x in PJson) {
@@ -272,30 +348,21 @@ function PrintProductionTable(response , Raws , Masters){
 			txt += '<td></td>';
 			$('#mytable').append(txt);
                  }
+}  
 
-        $(".mybtn-delete").click(function(){
 
-		var MatiralName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
- 		$("#MyDelSpan").html("    Are you sure you want to delete  " + MatiralName);
-		$("#DelSpanHeadline").text("Deleting  " + MatiralName);
-		$("#DeleteMatiral").attr("data-MatiralName" , MatiralName);
-         })
+function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){  
 
 	$(".mybtn-new").click(function(){
-		var GroupType = MatiralsJson.GroupType;
 		var MasterOptions = MatiralsJson.MasterOptions;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
-		$("#NewMatiralHeading").text('New '+ $("#MenuContent").attr("data-Matiral-type"));
+		var MatiralName = $("#MainDiv").attr("data-MatiralName");
+		$("#NewMatiralHeading").text('New instance of '+ MatiralName);
 
-		if (FType) {
-			$("#NewGroupsTypeDiv").removeClass('hidden');
-			for (x in GroupType) 
-				OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
-			$("#NewGroupsTypeSelect").html(OptionList);
-		}
                 if (Masters) {
 			$("#NewMasterDiv").removeClass('hidden');
+			$("#NewMasterSelect").attr("data-placeholder","Select Master Instances");
 			$("#NewMasterSelect").val('');
 			for (x in MasterOptions) 
 				$("#NewMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
@@ -309,64 +376,31 @@ function PrintProductionTable(response , Raws , Masters){
 			$("#NewRawSelect").trigger("chosen:updated");
 		}
 
-	})
-	$(".mybtn-edit").click(function(){
-		var GroupType = MatiralsJson.GroupType;
-		var MasterOptions = MatiralsJson.MasterOptions;
-		var RawOptions = MatiralsJson.RawOptions;
-		var OptionList =''; 
-		var OldName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
-		var CurrentGroupType = $(this).parentsUntil("tr").parent().find("td:eq(1)").text();
-		var CurrentMasterList = $(this).parentsUntil("tr").parent().find("td:eq(2)").text().split(',');
-		var CurrentRawList = $(this).parentsUntil("tr").parent().find("td:eq(3)").text().split(',');
-		var CurrentComment = $(this).parentsUntil("tr").parent().find("td:eq(4)").text();
+		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
+		$("#IdSaveNewMatirial").off('click').on('click' , function(){
 
-		$("#EditMatiral").attr("data-MatiralName" , OldName);
-		$("#EditMatiralHeading").text('Edit '+ OldName);
-		$("#EditMatiralName").val(OldName);
-		$("#EditMatiralComments").val(CurrentComment);
-
-		if (FType) {
-			$("#EditGroupsTypeDiv").removeClass('hidden');
-			for (x in GroupType) 
-			{
-				if (CurrentGroupType == GroupType[x].GroupType)
-					OptionList+='<option value=' +  GroupType[x].Id + ' selected>' + GroupType[x].GroupType + '</option>';
-				else
-					OptionList+='<option value=' +  GroupType[x].Id + '>' + GroupType[x].GroupType + '</option>';
-			}
-			$("#EditGroupsTypeSelect").html(OptionList);
-		}
-                if (Masters) {
-			$("#EditMasterDiv").removeClass('hidden');
-			$("#EditMasterSelect").val('');
-			for (x in MasterOptions) 
-			{
-				if(jQuery.inArray(MasterOptions[x].Name, CurrentMasterList) !== -1)
-					$("#EditMasterSelect").append('<option selected>' + MasterOptions[x].Name + '</option>');
-				else
-					$("#EditMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
-			}
-			$("#EditMasterSelect").trigger("chosen:updated");
-		}
-		if (Raws) {
-			$("#EditRawDiv").removeClass('hidden');
-			$("#EditRawSelect").val('');
-			for (x in RawOptions) 
-			{
-				if(jQuery.inArray(RawOptions[x].Name, CurrentRawList) !== -1)
-					$("#EditRawSelect").append('<option selected>' + RawOptions[x].Name + '</option>');
-				else
-					$("#EditRawSelect").append('<option>' + RawOptions[x].Name + '</option>');
-			}
-			$("#EditRawSelect").trigger("chosen:updated");
-		}
+			$.ajax({
+				type : "GET",
+				url : "SaveNewMatiral.php",
+				data: {Name: $("#NewMatiralName").val(), 
+					Comment: $("#NewMatiralComments").val(), 
+					MastersList: $("#NewMasterSelect").val() , 
+					RawsList: $("#NewRawSelect").val() , 
+					GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
+					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+				success : function(response) {
+					setTimeout(function()
+						{
+							location.reload();  //Refresh page
+						}, 1000);
+				}
+			});
 
 
 
-
+		});
 
 	})
-}  
+}
 
 

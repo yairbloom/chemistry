@@ -12,7 +12,9 @@ $(document).ready(function(){
             url : "GetProdactionInfo.php",
             data: { MatiralName : MatiralName ,  Master:IsMasterListRequired , Raw:IsRawListRequired },
 		success : function(response) {
-		             PrintProductionTable(response , IsRawListRequired , IsMasterListRequired);
+			var MatiralsJson = JSON.parse(response);
+			LoadProductionTable(MatiralsJson , IsRawListRequired , IsMasterListRequired);
+			LoadProdactionTableActionNew(MatiralsJson , IsRawListRequired , IsMasterListRequired);
               	          }
 
 	});

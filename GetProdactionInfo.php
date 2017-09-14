@@ -51,6 +51,40 @@ foreach ($outp as $value)
 	array_push($ProductionList,$value);
 
 }
+
+if(!empty($_GET["Raw"]))
+{
+	$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Raw' and A.Material2=B.Name",$MatiralName);
+	$resultRaw = mysqli_query($con,$sql);
+	$outpRaw = array();
+	$outpRaw = $resultRaw->fetch_all(MYSQLI_ASSOC);
+	$value['RawRecipe'] = [];
+	$index =0;
+	foreach ($outpRaw as $valueRaw)
+	{
+		$value['RawRecipe'][$index] = $valueRaw;
+		$index++;
+	}
+
+
+}
+
+if(!empty($_GET["Master"]))
+{
+	$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Master' and A.Material2=B.Name",$MatiralName);
+	$resultMaster = mysqli_query($con,$sql);
+	$outpMaster = array();
+	$outpMaster = $resultMaster->fetch_all(MYSQLI_ASSOC);
+	$value['MasterRecipe'] = [];
+	$index =0;
+	foreach ($outpMaster as $valueMaster)
+	{
+		$value['MasterRecipe'][$index] = $valueMaster;
+		$index++;
+	}
+
+}
+
 echo json_encode($ProductionList );
 ?>
 

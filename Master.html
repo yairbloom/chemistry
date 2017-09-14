@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
-    <title>Formulation</title>
+    <title>Master</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
     <style type="text/css">
@@ -51,7 +51,13 @@ $(document).ready(function(){
             type : "GET",
             url : "GetMaterials.php?SBMatiralType=Master&Raw=yes",
 		success : function(response) {
-		             PrintTable(response , false , false , true);
+			var MatiralsJson = JSON.parse(response);
+			LoadMainTable(MatiralsJson , false , false , true);
+			LoadMainTableActionNew(MatiralsJson , false , false , true);
+			LoadMainTableActionEdit(MatiralsJson , false , false , true);
+			LoadMainTableActionDelete();
+			LoadMainTableActionProduction();
+
               	          }
         });
 });

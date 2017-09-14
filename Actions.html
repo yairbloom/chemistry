@@ -12,72 +12,11 @@
 	width: 100% !important; /* or any value that fits your needs */
 }
 
+li.search-field input.default {
+    width: auto !important;
+}		   
+
 </style>
-
-<script>
-$(document).ready(function() {
-    $("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
-    $(".SaveNewMatirial").click(function(){
-	    $.ajax({
-		    type : "GET",
-		    url : "SaveNewMatiral.php",
-		    data: {Name: $("#NewMatiralName").val(), 
-			   Comment: $("#NewMatiralComments").val(), 
-			   MastersList: $("#NewMasterSelect").val() , 
-			   RawsList: $("#NewRawSelect").val() , 
-			   GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
-			   MatiralType : $("#MenuContent").attr("data-Matiral-type")},
-		    success : function(response) {
-			    setTimeout(function()
-				    {
-					    location.reload();  //Refresh page
-				    }, 1000);
-		    }
-	    });
-    });
-
-    $(".SaveEditedMatirial").click(function(){
-	    $.ajax({
-		    type : "GET",
-		    url : "SaveEditedMatirial.php",
-		    data: {OldName: $("#EditMatiral").attr("data-MatiralName"),
-			   NewName: $("#EditMatiralName").val(), 
-			   Comment: $("#EditMatiralComments").val(), 
-			   MastersList: $("#EditMasterSelect").val() , 
-			   RawsList: $("#EditRawSelect").val() , 
-			   GroupTypeName: $("#EditGroupsTypeSelect").val()  , 
-			   MatiralType : $("#MenuContent").attr("data-Matiral-type")},
-		    success : function(response) {
-			    setTimeout(function()
-				    {
-					    location.reload();  //Refresh page
-				    }, 1000);
-		    }
-	    });
-    });
-
-
-
-  $(".DeleteMatiral").click(function(){
-	  $.ajax({
-		  type : "GET",
-		  url : "DeleteMatiral.php",
-		  data: {MatiralName: $("#DeleteMatiral").attr("data-MatiralName") },
-		    success : function(response) {
-			    setTimeout(function()
-				    {
-					    location.reload();  //Refresh page
-				    }, 1000);
-		    }
-	    });
-
-
-  });
-
-});
-</script>
-
-
 
       <!-------------------------- edit    --------------------------> 
     <div class="modal fade" id="EditMatiral" data-MatiralName='' tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
@@ -92,13 +31,7 @@ $(document).ready(function() {
                         <div class="col-sm-10">
 	                    <input type="text" class="form-control" id="EditMatiralName" placeholder="Enter Name" name="MatName">
                         </div>
-		        <div id="EditGroupsTypeDiv" class="hidden">
-			    <label class="control-label col-sm-2" >Type:</label>
-			    <div class="col-sm-10" >
-		                <select class="form-control" id="EditGroupsTypeSelect">
-			        </select>
-			    </div>
-			</div>
+		        <div id="EditSelectionDiv" class="hidden"></div>
 
 			<div id="EditMasterDiv" class="hidden">
 			    <label class="control-label col-sm-2" >Master :</label>
@@ -128,7 +61,7 @@ $(document).ready(function() {
     <!-- /.modal-budy --> 
       </div>
         <div class="modal-footer ">
-        <button type="button" class="btn btn-success SaveEditedMatirial" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+        <button id="SaveEditedMatirial" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
       </div>
         </div>
@@ -151,31 +84,8 @@ $(document).ready(function() {
        
       </div>
         <div class="modal-footer ">
-        <button type="button" class="btn btn-success DeleteMatiral" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Yes</button>
+        <button id="SaveDeleteMatiral" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Yes</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>No</button>
-      </div>
-        </div>
-    <!-- /.modal-content --> 
-  </div>
-      <!-- /.modal-dialog --> 
-    </div>
-
-      <!-------------------------- Prodaction    --------------------------> 
-    <div class="modal fade" id="Prodaction" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-      <div class="modal-dialog">
-    <div class="modal-content">
-          <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
-        <h4 class="modal-title custom_align" id="Heading">Eliminacion de Registrosy</h4>
-      </div>
-          <div class="modal-body">
-       
-       <div class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> Esta ud seguro de eliminar el registro?</div>
-       
-      </div>
-        <div class="modal-footer ">
-        <button type="button" class="btn btn-success" ><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
       </div>
         </div>
     <!-- /.modal-content --> 
@@ -196,13 +106,7 @@ $(document).ready(function() {
                         <div class="col-sm-10">
 	                    <input type="text" class="form-control" id="NewMatiralName" placeholder="Enter Name" name="MatName">
                         </div>
-		        <div id="NewGroupsTypeDiv" class="hidden">
-			    <label class="control-label col-sm-2" >Type:</label>
-			    <div class="col-sm-10" >
-		                <select class="form-control" id="NewGroupsTypeSelect">
-			        </select>
-			    </div>
-			</div>
+		        <div id="NewSelectionDiv" class="hidden"></div>
 
 			<div id="NewMasterDiv" class="hidden">
 			    <label class="control-label col-sm-2" >Master :</label>
@@ -232,7 +136,7 @@ $(document).ready(function() {
     <!-- /.modal-budy --> 
       </div>
         <div class="modal-footer ">
-        <button type="button" class="btn btn-success SaveNewMatirial" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
+        <button id="IdSaveNewMatirial" type="button" class="btn btn-success" data-dismiss="modal"><span class="glyphicon glyphicon-ok-sign"></span>Save</button>
         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span>Cancel</button>
       </div>
         </div>

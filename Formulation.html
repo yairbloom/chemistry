@@ -32,7 +32,7 @@
 
 
 <body>
-<div id="MenuContent" data-Matiral-type="Production"></div>
+<div id="MenuContent" data-Matiral-type="Formulation"></div>
 
   <div class="container">
     <div class="row">
@@ -54,7 +54,14 @@ $(document).ready(function(){
             url : "GetMaterials.php",
             data: {SBMatiralType:"Formulation" , GroupType:"yes" , Master:"yes" , Raw:"yes" },
 		success : function(response) {
-		             PrintTable(response , true ,true , true , "Formulation");
+			var MatiralsJson = JSON.parse(response);
+		             LoadMainTable(MatiralsJson , true ,true , true );
+			     LoadFormulationGroupType(MatiralsJson , "New");
+			     LoadMainTableActionNew(MatiralsJson , true , true);
+			     LoadFormulationGroupType(MatiralsJson , "Edit");
+			     LoadMainTableActionEdit(MatiralsJson , true , true);
+			     LoadMainTableActionDelete();
+			     LoadMainTableActionProduction();
               	          }
         });
 
