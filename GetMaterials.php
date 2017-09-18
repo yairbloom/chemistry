@@ -23,7 +23,7 @@ foreach ($outp as $value)
 {
 	if(!empty($_GET["Raw"]))
 	{
-		$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Raw' and A.Material2=B.Name",$value['Name']);
+		$sql=sprintf("SELECT A.Material2 from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Raw' and A.Material2=B.Name",$value['Name']);
 		$resultRaw = mysqli_query($con,$sql);
 		$outpRaw = array();
 		$outpRaw = $resultRaw->fetch_all(MYSQLI_ASSOC);
@@ -38,7 +38,7 @@ foreach ($outp as $value)
 
 	if(!empty($_GET["Master"]))
 	{
-		$sql=sprintf("SELECT A.Material2,A.Id from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Master' and A.Material2=B.Name",$value['Name']);
+		$sql=sprintf("SELECT A.Material2 from  MaterialsRecipe AS A,Materials as B where Material1='%s' and B.Type='Master' and A.Material2=B.Name",$value['Name']);
 		$resultMaster = mysqli_query($con,$sql);
 		$outpMaster = array();
 		$outpMaster = $resultMaster->fetch_all(MYSQLI_ASSOC);

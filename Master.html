@@ -36,7 +36,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-12" id="MainDiv" data-MatiralType="Master">
-		<h2 style="font-weight: bold;text-align: center">Master</h1> <br>
+		<h2 id="MyHeadline" style="font-weight: bold;text-align: center">Master</h2> <br>
         <div class="table-responsive">
            <table id="mytable" class="table table-bordred table-striped"></table>
         </div>
@@ -53,8 +53,8 @@ $(document).ready(function(){
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
 			LoadMainTable(MatiralsJson , false , false , true);
-			LoadMainTableActionNew(MatiralsJson , false , false , true);
-			LoadMainTableActionEdit(MatiralsJson , false , false , true);
+			LoadMainTableActionNew(MatiralsJson ,  false , true);
+			LoadMainTableActionEdit(MatiralsJson  , false , true);
 			LoadMainTableActionDelete();
 			LoadMainTableActionProduction();
 

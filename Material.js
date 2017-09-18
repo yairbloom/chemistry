@@ -78,8 +78,8 @@ function LoadMainTable(MatiralsJson , FType , Masters , Raws ){
 			txt += '<span class="glyphicon glyphicon-pencil"></span></button>';
 			txt += '<button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#DeleteMatiral"';
 			txt += ' data-placement="top" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>';
-			txt += '<button class="btn btn-success btn-xs mybtn-prodaction" data-title="Prodaction"  data-toggle="tooltip" title="Prodaction">';
-			txt += '<span class="glyphicon glyphicon-filter"></span></button></td>';
+			txt += '<button class="btn btn-success btn-xs mybtn-prodaction disabled" data-title="Prodaction"  data-toggle="tooltip" title="Prodaction">';
+			txt += '<span class="glyphicon glyphicon-cog"></span></button></td>';
 			txt += '<td></td>';
 			$('#mytable').append(txt);
                  }
@@ -258,16 +258,19 @@ function LoadMainTableActionProduction(){
       $(".mybtn-prodaction").click(function(){
 	      var MatiralName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
 	      var MatiralType = $("#MainDiv").attr("data-MatiralType");
+	      console.log("MatiralName="+MatiralName + " MatiralType=" + MatiralType);
 	      $("#MainDiv").attr("data-MatiralName" , MatiralName);
 	      $("#MyHeadline").text(MatiralType + ": " + MatiralName);
 	      $("#mytable").load("Production.html");
-	      $("#ActionsContent").load("ProductionActions.html");
+	      //$("#ActionsContent").load("ProductionActions.html");
+	      $("#ActionsContent").load("Actions.html");
 
          })
 }
 
 
 function LoadProductionTable(PJson , Raws , Masters){  
+        var InstancesList = PJson.InstancesList;
 	var x ;
 	var theadStr =  '<thead><th>SerialId</th>';
 	if (Masters)
@@ -293,7 +296,7 @@ function LoadProductionTable(PJson , Raws , Masters){
 	        NewItemRow+='<span class="glyphicon glyphicon-plus"></span></button></p></td></tr>';
 	         $('#mytable').append(NewItemRow);
 
-                for (x in PJson) {
+                for (x in InstancesList) {
 			var txt='<tr><td>';
 			RawStr="";
 			MasterStr="";
@@ -301,21 +304,21 @@ function LoadProductionTable(PJson , Raws , Masters){
 			if (Raws)
 			{
 				delimiter="";
-				for (i in PJson[x].Raw) {
-					RawStr+=delimiter + PJson[x].Raw[i].MaterialName + '(' + PJson[x].Raw[i].MaterialSN + ')';
+				for (i in InstancesList[x].Raw) {
+					RawStr+=delimiter + InstancesList[x].Raw[i].MaterialName + '(' + InstancesList[x].Raw[i].MaterialSN + ')';
 					delimiter=",";
 				}
 			}
 			if (Masters)
 			{
 				delimiter="";
-				for (i in PJson[x].Master) {
-					MasterStr+=delimiter +  PJson[x].Master[i].MaterialName + '(' + PJson[x].Master[i].MaterialSN + ')';
+				for (i in InstancesList[x].Master) {
+					MasterStr+=delimiter +  InstancesList[x].Master[i].MaterialName + '(' + InstancesList[x].Master[i].MaterialSN + ')';
 					delimiter=",";
 				}
 			}
 
-			txt += PJson[x].SerialNumber;
+			txt += InstancesList[x].SerialNumber;
 			txt += '</td><td>';
 			if (Masters)
 			{
@@ -328,17 +331,17 @@ function LoadProductionTable(PJson , Raws , Masters){
 				txt += '</td><td>';
 			}
 
-			txt += PJson[x].Quantity;
-			if (PJson[x].QuantityType == 1)
+			txt += InstancesList[x].Quantity;
+			if (InstancesList[x].QuantityType == 1)
 				txt += " Gram";
-			else if (PJson[x].QuantityType == 2)
+			else if (InstancesList[x].QuantityType == 2)
                                 txt += " Liter";
 			txt += '</td><td>';
-			txt += PJson[x].Comment;
+			txt += InstancesList[x].Comment;
 			txt += '</td><td>';
 			txt += "Yair";
 			txt += '</td><td>';
-			txt += PJson[x].LastModify;
+			txt += InstancesList[x].LastModify;
 			txt += '</td>';
 			txt += '<td><div class="btn-group">';
 		        txt += '<button class="btn btn-primary btn-xs mybtn-edit" data-title="Edit" data-toggle="modal" data-target="#EditMatiral" data-placement="top" data-toggle="tooltip" title="Edit">';
@@ -354,53 +357,87 @@ function LoadProductionTable(PJson , Raws , Masters){
 function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){  
 
 	$(".mybtn-new").click(function(){
-		var MasterOptions = MatiralsJson.MasterOptions;
+		var RecipeOptionMaster = MatiralsJson.RecipeOptionMaster;
+		var RecipeOptionRaw = MatiralsJson.RecipeOptionRaw;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
 		var MatiralName = $("#MainDiv").attr("data-MatiralName");
 		$("#NewMatiralHeading").text('New instance of '+ MatiralName);
+		$("#NewMatiralName").val(MatiralsJson.Candidate);
+		$("#NewMatLabel").text("Serial Id");
 
                 if (Masters) {
 			$("#NewMasterDiv").removeClass('hidden');
 			$("#NewMasterSelect").attr("data-placeholder","Select Master Instances");
-			$("#NewMasterSelect").val('');
-			for (x in MasterOptions) 
-				$("#NewMasterSelect").append('<option>' + MasterOptions[x].Name + '</option>');
+			var SelectStr='';
+			for (ROM in RecipeOptionMaster) {
+				SelectStr+= '<optgroup label=' + RecipeOptionMaster[ROM].MatiralName + '>';
+				for (Ins in RecipeOptionMaster[ROM].Instances) 
+				{
+					var OptionName = '<option>'+ RecipeOptionMaster[ROM].MatiralName + '(' + RecipeOptionMaster[ROM].Instances[Ins] + ')</option>';
+					SelectStr+= OptionName.replace(/\s+/, "");
+				}
+				SelectStr+= '</optgroup>';
+			}
+			$("#NewMasterSelect").html(SelectStr);
 			$("#NewMasterSelect").trigger("chosen:updated");
 		}
 		if (Raws) {
 			$("#NewRawDiv").removeClass('hidden');
-			$("#NewRawSelect").val('');
-			for (x in RawOptions) 
-				$("#NewRawSelect").append('<option>' + RawOptions[x].Name + '</option>');
+			var SelectStr='';
+			for (ROR in RecipeOptionRaw) {
+				SelectStr+='<optgroup label=' + RecipeOptionRaw[ROR].MatiralName + '>';
+				for (Ins in RecipeOptionRaw[ROR].Instances) 
+				{
+					var OptionName = '<option>'+ RecipeOptionRaw[ROR].MatiralName + '(' +RecipeOptionRaw[ROR].Instances[Ins] + ')</option>';
+					SelectStr+= OptionName.replace(/\s+/, "") ;
+				}
+				SelectStr+= '</optgroup>';
+			}
+			$("#NewRawSelect").html(SelectStr);
 			$("#NewRawSelect").trigger("chosen:updated");
 		}
 
+		$("#NewSize").removeClass('hidden');
+		var SizeHtml='<label class="control-label col-sm-2" >Quantity :</label>';
+		SizeHtml+= '<div class="col-sm-10 container" >';
+		SizeHtml+= '<input type="number" class="form-control" id="NewMatiralSize" placeholder="Select Quantity" name="NewQuantityInput"></div>';
+		$("#NewSize").html(SizeHtml);
+
+		$("#NewSizeType").removeClass('hidden');
+		SizeHtml='<label class="control-label col-sm-2" >Units:</label>';
+		SizeHtml+= '<div class="col-sm-10 container" ><select class="form-control">';
+		SizeHtml+= '<option selected value="1"> Gram </option><option value="2"> Liter </option> </select></div>';
+		$("#NewSizeType").html(SizeHtml);
+
+
+
+
 		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
-		$("#IdSaveNewMatirial").off('click').on('click' , function(){
-
-			$.ajax({
-				type : "GET",
-				url : "SaveNewMatiral.php",
-				data: {Name: $("#NewMatiralName").val(), 
-					Comment: $("#NewMatiralComments").val(), 
-					MastersList: $("#NewMasterSelect").val() , 
-					RawsList: $("#NewRawSelect").val() , 
-					GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
-					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
-				success : function(response) {
-					setTimeout(function()
-						{
-							location.reload();  //Refresh page
-						}, 1000);
-				}
-			});
-
-
-
-		});
-
+	
 	})
+}
+
+function OptgroupBehavior()
+{
+		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").off('change').on('change', function (e , params){
+			var ChangeText = '';
+			var Disable=false;
+			if (params.selected) 
+			{
+				ChangeText=params.selected;
+				Disable=true;
+			}
+			if (params.deselected)
+				ChangeText=params.deselected;
+
+			var TheOption = $( "option" ).filter( function () {
+				return $( this ).text().indexOf( ChangeText ) >= 0;
+			}).first();
+
+			TheOption.siblings().prop('disabled', Disable);
+			$(this).trigger("chosen:updated");
+		});
 }
 
 
