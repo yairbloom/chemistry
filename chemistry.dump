@@ -1,8 +1,8 @@
--- MySQL dump 10.14  Distrib 5.5.43-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.24-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: chemistry
+-- Host: localhost    Database: ChemistryTest
 -- ------------------------------------------------------
--- Server version	5.5.43-MariaDB
+-- Server version	5.7.18-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,10 +24,20 @@ DROP TABLE IF EXISTS `FormulationGroup`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `FormulationGroup` (
   `Id` int(11) NOT NULL DEFAULT '0',
-  `Name` text,
+  `GroupType` text,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `FormulationGroup`
+--
+
+LOCK TABLES `FormulationGroup` WRITE;
+/*!40000 ALTER TABLE `FormulationGroup` DISABLE KEYS */;
+INSERT INTO `FormulationGroup` VALUES (1,'Zirconia Model'),(2,'Zirconia Support'),(3,'Stainless steel Model'),(4,'Stainless steel Support'),(5,'AP');
+/*!40000 ALTER TABLE `FormulationGroup` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `FormulationNameToGroup`
@@ -44,6 +54,16 @@ CREATE TABLE `FormulationNameToGroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `FormulationNameToGroup`
+--
+
+LOCK TABLES `FormulationNameToGroup` WRITE;
+/*!40000 ALTER TABLE `FormulationNameToGroup` DISABLE KEYS */;
+INSERT INTO `FormulationNameToGroup` VALUES ('',1),('a1',1),('a2',1),('a3',1),('a4',1),('aaabbb',1),('aaassgrfrfgfg',1),('AP2003',1),('AP201',5),('AP202y',4),('bbb',2),('EP2_100',1),('lala',1),('lllll',2),('newone',2),('qqqqqqqqq',1),('RS20',3),('RS35',3),('SG-60',4),('sss',1),('www',1),('y1',2);
+/*!40000 ALTER TABLE `FormulationNameToGroup` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Materials`
 --
 
@@ -55,9 +75,20 @@ CREATE TABLE `Materials` (
   `Comment` text,
   `Type` enum('Raw','Master','Formulation') DEFAULT NULL,
   `Available` int(1) DEFAULT NULL,
+  `LastModify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Materials`
+--
+
+LOCK TABLES `Materials` WRITE;
+/*!40000 ALTER TABLE `Materials` DISABLE KEYS */;
+INSERT INTO `Materials` VALUES ('','','Formulation',1,'2017-09-18 10:12:51'),('1111','22222','Formulation',1,'2017-09-06 07:22:46'),('222','33333','Formulation',1,'2017-09-06 07:22:46'),('2223','333333','Formulation',1,'2017-09-06 07:22:46'),('2223a','333333','Formulation',1,'2017-09-06 07:22:46'),('a3','','Formulation',1,'2017-09-12 09:03:49'),('a4','ssss','Formulation',1,'2017-09-12 09:04:08'),('aaa3','LOL','Raw',1,'2017-09-10 13:27:48'),('aaaa','wwww111','Formulation',1,'2017-09-10 12:30:50'),('aaabbb2','aaaaa2','Formulation',1,'2017-09-10 13:12:55'),('AMOH','\r\n  ','Raw',1,'2017-09-06 07:22:46'),('AP200','2%','Formulation',1,'2017-09-06 07:22:46'),('AP201','4% PVAc in PG:PC 95:5\r\n  ','Formulation',1,'2017-09-06 07:22:46'),('AP202','4% PVAc, 1% PHT in PG','Formulation',1,'2017-09-06 07:22:46'),('APS','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('Ax101_2','\r\n  ','Master',1,'2017-09-06 07:22:46'),('BYK 190','40% W/W in water\r\n  ','Raw',1,'2017-09-06 07:22:46'),('Byk190 60% DB dry','  Please enter your comment here.\r\n  ','Master',1,'2017-09-06 07:22:46'),('DB','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('DEGBE','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('EG','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('EP2','\r\n  ','Raw',1,'2017-09-06 07:22:46'),('EP2_100',' 2.5% EP2 in PG\r\n  ','Formulation',1,'2017-09-06 07:22:46'),('EtOH','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('GC','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('H2O','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('JC 5%','f\r\n  ','Master',1,'2017-09-06 07:22:46'),('JC581','\r\n  ','Raw',1,'2017-09-06 07:22:46'),('mm,','ssssssssssssssssssss','Master',1,'2017-09-14 11:22:39'),('newone2','ddd2','Formulation',1,'2017-09-10 12:48:56'),('O.A.','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('O.A. 5%','  Please enter your comment here.\r\n  ','Master',1,'2017-09-06 07:22:46'),('PC','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('PG','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('PHT','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('PPH','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('PVAc','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('PVAc 10% in PG','10% PVAc in PG (wt%)\r\n  ','Master',1,'2017-09-06 07:22:46'),('qqqqqqqqq','www','Formulation',1,'2017-09-14 12:16:14'),('qqqqqqqqqq','aaaa','Formulation',1,'2017-09-06 07:24:14'),('qwq','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('R710','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('rrrr','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-11 13:19:18'),('RS-powder','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('RS20','  Please enter your comment here.\r\n  ','Formulation',1,'2017-09-06 07:22:46'),('RS35','  Please enter your comment here.\r\n  ','Formulation',1,'2017-09-06 07:22:46'),('SDS','  Please enter your comment here.\r\n  ','Raw',1,'2017-09-06 07:22:46'),('SG-60','\r\n  ','Formulation',1,'2017-09-06 07:22:46'),('ssaaa','ssssss','Formulation',1,'2017-09-06 07:22:46'),('TEOS','\r\n  ','Raw',1,'2017-09-06 07:22:46'),('we','eeee','Formulation',1,'2017-09-06 07:22:46'),('wwwaaa','wwwwaaa','Formulation',1,'2017-09-10 12:34:24'),('wwww','aaa','Formulation',1,'2017-09-06 07:22:46'),('Zirconia','TZ-3YS-E\r\nTOSOH  ','Raw',1,'2017-09-06 07:22:46'),('Zr7B','  Please enter your comment here.\r\n  ','Master',1,'2017-09-06 07:22:46');
+/*!40000 ALTER TABLE `Materials` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `MaterialsRecipe`
@@ -71,8 +102,18 @@ CREATE TABLE `MaterialsRecipe` (
   `Material1` varchar(40) DEFAULT NULL,
   `Material2` varchar(40) DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=915 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `MaterialsRecipe`
+--
+
+LOCK TABLES `MaterialsRecipe` WRITE;
+/*!40000 ALTER TABLE `MaterialsRecipe` DISABLE KEYS */;
+INSERT INTO `MaterialsRecipe` VALUES (1,'PVAc 10% in PG','PG'),(2,'PVAc 10% in PG','PVAc'),(3,'RS20','GC'),(4,'RS20','PC'),(5,'RS20','PG'),(6,'RS20','R710'),(7,'RS20','RS-powder'),(8,'RS35','PC'),(9,'RS35','PG'),(10,'RS35','PPH'),(11,'RS35','R710'),(12,'RS35','RS-powder'),(13,'Zr7B','Zirconia'),(14,'Zr7B','DEGBE'),(15,'Zr7B','BYK 190'),(18,'Byk190 60% DB dry','BYK 190'),(19,'Byk190 60% DB dry','DB'),(20,'Ax101_2','AMOH'),(21,'Ax101_2','DB'),(22,'Ax101_2','EG'),(23,'Ax101_2','EtOH'),(24,'Ax101_2','H2O'),(25,'Ax101_2','TEOS'),(26,'JC 5%','DB'),(27,'JC 5%','JC581'),(28,'SG-60','EG'),(29,'SG-60','DB'),(30,'SG-60','Ax101_2'),(31,'SG-60','Byk190 60% DB dry'),(32,'SG-60','O.A. 5%'),(33,'O.A. 5%','DB'),(34,'O.A. 5%','O.A.'),(35,'AP201','PC'),(36,'AP201','PG'),(37,'AP201','PVAc 10% in PG'),(45,'zozo','APS'),(46,'zozo','BYK 190'),(47,'zozo','JC 5%'),(48,'zozo','O.A. 5%'),(51,'qqqqqqqqqq','BYK 190'),(52,'qqqqqqqqqq','DB'),(53,'qqqqqqqqqq','Byk190 60% DB dry'),(54,'qqqqqqqqqq','PVAc 10% in PG'),(55,'1111','APS'),(56,'1111','Ax101_2'),(57,'222','BYK 190'),(58,'222','Byk190 60% DB dry'),(59,'2223','DB'),(60,'2223','JC 5%'),(61,'2223','APS'),(62,'2223','Byk190 60% DB dry'),(63,'2223a','Byk190 60% DB dry'),(64,'wwww','Ax101_2'),(65,'aaassgrfrfgfg','AMOH'),(66,'aaassgrfrfgfg','JC 5%'),(72,'newone','Ax101_2'),(73,'newone','JC 5%'),(74,'newone','PVAc 10% in PG'),(75,'newone2','aaa3'),(76,'newone2','Ax101_2'),(77,'newone2','Zr7B'),(78,'aaabbb','Ax101_2'),(79,'aaabbb2','aaa3'),(80,'aaabbb2','Ax101_2'),(93,'×©1','AMOH'),(94,'×©1','DB'),(95,'×©1','DEGBE'),(96,'×©1','JC 5%'),(97,'×©1','mm,'),(99,'×©1','Zr7B'),(100,'aaaaaaaddd','AMOH'),(101,'aaaaaaaddd','Byk190 60% DB dry'),(102,'a4','APS'),(103,'a4','JC 5%'),(111,'AP2003','PC'),(112,'AP2003','JC 5%'),(113,'AP2003','Zr7B'),(114,'AP202y','PG'),(115,'AP202y','JC 5%'),(116,'AP202y','PVAc 10% in PG'),(117,'mm,','BYK 190'),(118,'qqqqqqqqq','AMOH'),(119,'qqqqqqqqq','JC 5%'),(120,'','AMOH(1)');
+/*!40000 ALTER TABLE `MaterialsRecipe` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ProductionMaterials`
@@ -82,13 +123,56 @@ DROP TABLE IF EXISTS `ProductionMaterials`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ProductionMaterials` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(40) NOT NULL,
+  `SerialNumber` varchar(16) NOT NULL DEFAULT '',
+  `Comment` char(255) NOT NULL DEFAULT '',
+  `Quantity` float DEFAULT NULL,
+  `QuantityType` int(1) DEFAULT NULL,
+  `LastModify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`Id`),
+  KEY `Name` (`Name`,`SerialNumber`),
+  CONSTRAINT `ProductionMaterials_ibfk_2` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProductionMaterials`
+--
+
+LOCK TABLES `ProductionMaterials` WRITE;
+/*!40000 ALTER TABLE `ProductionMaterials` DISABLE KEYS */;
+INSERT INTO `ProductionMaterials` VALUES (1,'AMOH','      1','',0,1,'2017-09-11 14:50:38'),(2,'AP200','57195_1','',0,1,'2017-09-11 14:50:38'),(3,'AP201','57203_2','',0,1,'2017-09-11 14:50:38'),(4,'AP202','57203_3','',0,1,'2017-09-11 14:50:38'),(5,'Ax101_2','1','',0,1,'2017-09-11 14:50:38'),(6,'BYK 190',' 1','',0,1,'2017-09-11 14:50:38'),(7,'Byk190 60% DB dry','1','',0,1,'2017-09-11 14:50:38'),(8,'DB','      1','',0,1,'2017-09-11 14:50:38'),(9,'EG','      1','',0,1,'2017-09-11 14:50:38'),(10,'EP2','     1','',0,1,'2017-09-11 14:50:38'),(11,'EP2_100','57203_1','',0,1,'2017-09-11 14:50:38'),(12,'EtOH','    1','',0,1,'2017-09-11 14:50:38'),(13,'H2O','     1','',0,1,'2017-09-11 14:50:38'),(14,'O.A.','    1','',0,1,'2017-09-11 14:50:38'),(15,'O.A. 5%','1','',0,1,'2017-09-11 14:50:38'),(16,'PC','0     ','',0,1,'2017-09-11 14:50:38'),(17,'PG','      1','',0,1,'2017-09-11 14:50:38'),(18,'PHT','     1','',0,1,'2017-09-11 14:50:38'),(19,'PPH','     1','',0,1,'2017-09-11 14:50:38'),(20,'PVAc','    1','',0,1,'2017-09-11 14:50:38'),(21,'PVAc 10% in PG','1','',0,1,'2017-09-11 14:50:38'),(22,'R710','    1','',0,1,'2017-09-11 14:50:38'),(23,'RS-powder','       1','',0,1,'2017-09-11 14:50:38'),(24,'RS35','37195_1','',0,1,'2017-09-11 14:50:38'),(25,'SG-60','47195_1','',0,1,'2017-09-11 14:50:38'),(26,'TEOS','    1','',0,1,'2017-09-11 14:50:38'),(27,'222','07372_1','',0,1,'2017-09-11 14:50:38'),(28,'222','07372_2','',0,1,'2017-09-11 14:50:38'),(29,'PC','	7','',12,1,'2017-09-11 14:50:38'),(30,'AP200','57372_1','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',0,1,'2017-09-11 14:54:59'),(31,'AP200','57372_2','',0,1,'2017-09-11 14:50:38'),(32,'PG','	','',3,1,'2017-09-11 14:50:38'),(33,'AP200','57372_3','',0,1,'2017-09-11 14:50:38'),(34,'AP202','57372_1','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',0,1,'2017-09-11 14:54:59'),(35,'GC','	2','	Please enter your comment here.\r\n	',0,1,'2017-09-14 13:29:18'),(36,'RS20','37375_1','	Please enter your comment here.\r\n	',0,1,'2017-09-14 13:29:32'),(37,'PG','	66','	Please enter your comment here.\r\n	',2,1,'2017-09-17 08:22:39');
+/*!40000 ALTER TABLE `ProductionMaterials` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ProductionMaterials_old`
+--
+
+DROP TABLE IF EXISTS `ProductionMaterials_old`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ProductionMaterials_old` (
   `Name` varchar(40) NOT NULL,
   `SerialNumber` varchar(16) NOT NULL DEFAULT '',
   `Comment` text,
+  `Quantity` float DEFAULT NULL,
+  `QuantityType` int(1) DEFAULT NULL,
   PRIMARY KEY (`Name`,`SerialNumber`),
-  CONSTRAINT `ProductionMaterials_ibfk_1` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
+  CONSTRAINT `ProductionMaterials_old_ibfk_1` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProductionMaterials_old`
+--
+
+LOCK TABLES `ProductionMaterials_old` WRITE;
+/*!40000 ALTER TABLE `ProductionMaterials_old` DISABLE KEYS */;
+INSERT INTO `ProductionMaterials_old` VALUES ('AMOH','      1','    Please enter your comment here.\r\n     ',0,1),('AP200','57195_1',' Please enter your comment here.\r\n     ',0,1),('AP201','57203_2',' Please enter your comment here.\r\n     ',0,1),('AP202','57203_3',' Please enter your comment here.\r\n     ',0,1),('Ax101_2','1','     Please enter your comment here.\r\n     ',0,1),('BYK 190',' 1','    Please enter your comment here.\r\n     ',0,1),('Byk190 60% DB dry','1','   Please enter your comment here.\r\n     ',0,1),('DB','      1','    Please enter your comment here.\r\n     ',0,1),('EG','      1','    Please enter your comment here.\r\n     ',0,1),('EP2','     1','    Please enter your comment here.\r\n     ',0,1),('EP2_100','57203_1','       Please enter your comment here.\r\n     ',0,1),('EtOH','    1','    Please enter your comment here.\r\n     ',0,1),('H2O','     1','    Please enter your comment here.\r\n     ',0,1),('O.A.','    1','    Please enter your comment here.\r\n     ',0,1),('O.A. 5%','1','     Please enter your comment here.\r\n     ',0,1),('PC','0     ','     Please enter your comment here.\r\n     ',0,1),('PG','      1','    Please enter your comment here.\r\n     ',0,1),('PHT','     1','    Please enter your comment here.\r\n     ',0,1),('PPH','     1','    Please enter your comment here.\r\n     ',0,1),('PVAc','    1','    Please enter your comment here.\r\n     ',0,1),('PVAc 10% in PG','1','      Please enter your comment here.\r\n     ',0,1),('R710','    1','    Please enter your comment here.\r\n     ',0,1),('RS-powder','       1','    Please enter your comment here.\r\n     ',0,1),('RS35','37195_1','  Please enter your comment here.\r\n     ',0,1),('SG-60','47195_1','\r\n     ',0,1),('TEOS','    1','    Please enter your comment here.\r\n     ',0,1);
+/*!40000 ALTER TABLE `ProductionMaterials_old` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ProductionRecipe`
@@ -99,12 +183,22 @@ DROP TABLE IF EXISTS `ProductionRecipe`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ProductionRecipe` (
   `Id` int(11) NOT NULL DEFAULT '0',
-  `Material1SN` int(11) NOT NULL DEFAULT '0',
-  `Material2SN` int(11) NOT NULL DEFAULT '0',
+  `Material1SN` varchar(16) NOT NULL DEFAULT '',
+  `Material2SN` varchar(16) NOT NULL DEFAULT '',
   `Available` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`Id`,`Material1SN`,`Material2SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ProductionRecipe`
+--
+
+LOCK TABLES `ProductionRecipe` WRITE;
+/*!40000 ALTER TABLE `ProductionRecipe` DISABLE KEYS */;
+INSERT INTO `ProductionRecipe` VALUES (3,'37375_1','2',1),(4,'37375_1','7',1),(5,'37375_1','1',1),(16,'57372_1','7',1),(16,'57372_2','7',1),(16,'57372_3','0',1),(17,'57372_1','1',1),(17,'57372_2','1',1),(17,'57372_3','1',1),(42,'57372_1','1',1),(43,'57372_1','1',1),(44,'57372_1','1',1),(57,'07372_1','1',1),(57,'07372_2','1',1),(58,'07372_1','1',1),(58,'07372_2','1',1);
+/*!40000 ALTER TABLE `ProductionRecipe` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -115,4 +209,4 @@ CREATE TABLE `ProductionRecipe` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-03-21 17:43:49
+-- Dump completed on 2017-09-19 18:28:59

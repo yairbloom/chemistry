@@ -14,8 +14,9 @@ $(document).ready(function(){
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
 			LoadProductionTable(MatiralsJson , IsRawListRequired , IsMasterListRequired);
-			LoadProdactionTableActionNew(MatiralsJson , IsRawListRequired , IsMasterListRequired);
 			OptgroupBehavior();
+			LoadProdactionTableActionNew(MatiralsJson , IsRawListRequired , IsMasterListRequired);
+			LoadProdactionTableActionEdit(MatiralsJson , IsRawListRequired , IsMasterListRequired);
               	          }
 
 	});

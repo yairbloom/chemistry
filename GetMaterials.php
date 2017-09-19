@@ -31,7 +31,11 @@ foreach ($outp as $value)
 		$index =0;
 		foreach ($outpRaw as $valueRaw)
 		{
-			$value['Raw'][$index] = $valueRaw['Material2'];
+			$value['Raw'][$index]->Name = $valueRaw['Material2'];
+			$sql=sprintf("SELECT count(Id) from  ProductionMaterials where Name='%s'" , $valueRaw['Material2']);
+			$ResCount =  mysqli_query($con,$sql);
+			if ($RowCount = mysqli_fetch_array($ResCount , MYSQLI_NUM) )   
+				$value['Raw'][$index]->InstancesCount = $RowCount[0];
 			$index++;
 		}
 	}
@@ -46,7 +50,12 @@ foreach ($outp as $value)
 		$index =0;
 		foreach ($outpMaster as $valueMaster)
 		{
-			$value['Master'][$index] = $valueMaster['Material2'];
+			$value['Master'][$index]->Name = $valueMaster['Material2'];
+			$sql=sprintf("SELECT count(Id) from  ProductionMaterials where Name='%s'" , $valueRaw['Material2']);
+			$ResCount =  mysqli_query($con,$sql);
+			if ($RowCount = mysqli_fetch_array($ResCount , MYSQLI_NUM) )   
+				$value['Master'][$index]->InstancesCount = $RowCount[0];
+
 			$index++;
 		}
 	}

@@ -32,21 +32,30 @@ function LoadMainTable(MatiralsJson , FType , Masters , Raws ){
 			var txt='<tr><td>';
 			RawStr="";
 			MasterStr="";
+			var DisableProdactionBtn = false;
 
 			if (Raws)
 			{
-				delimiter="";
 				for (i in MatList[x].Raw) {
-					RawStr+=delimiter + MatList[x].Raw[i];
-					delimiter=",";
+					var ClassStr="btn-info  btn-xs";
+					if (MatList[x].Raw[i].InstancesCount == '0') 
+					{
+						ClassStr="btn-warning  btn-xs";
+						DisableProdactionBtn = true;
+					}
+					RawStr+='<span class="' + ClassStr +  '">' + MatList[x].Raw[i].Name  + '</span>';
 				}
 			}
 			if (Masters)
 			{
-				delimiter="";
 				for (i in MatList[x].Master) {
-					MasterStr+=delimiter +  MatList[x].Master[i];
-					delimiter=",";
+					var ClassStr="btn-info  btn-xs";
+					if (MatList[x].Master[i].InstancesCount == '0') 
+					{
+						ClassStr="btn-warning  btn-xs";
+						DisableProdactionBtn = true;
+					}
+					MasterStr+='<span type="button" class="' + ClassStr +  '">' + MatList[x].Master[i].Name  + '</span>';
 				}
 			}
 
@@ -78,7 +87,10 @@ function LoadMainTable(MatiralsJson , FType , Masters , Raws ){
 			txt += '<span class="glyphicon glyphicon-pencil"></span></button>';
 			txt += '<button class="btn btn-danger btn-xs mybtn-delete" data-title="Delete" data-toggle="modal" data-target="#DeleteMatiral"';
 			txt += ' data-placement="top" data-toggle="tooltip" title="Delete"><span class="glyphicon glyphicon-trash"></span></button>';
-			txt += '<button class="btn btn-success btn-xs mybtn-prodaction disabled" data-title="Prodaction"  data-toggle="tooltip" title="Prodaction">';
+			txt += '<button class="btn btn-success btn-xs mybtn-prodaction ';
+			if (DisableProdactionBtn)
+				txt += 'disabled=/"disabled/""'; 
+			txt += 'data-title="Prodaction"  data-toggle="tooltip" title="Prodaction">';
 			txt += '<span class="glyphicon glyphicon-cog"></span></button></td>';
 			txt += '<td></td>';
 			$('#mytable').append(txt);
@@ -138,7 +150,7 @@ function LoadMainTableActionNew(MatiralsJson ,  Masters , Raws ){
 			$("#NewRawSelect").trigger("chosen:updated");
 		}
 
-		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
+		$(".MychosenSelect").chosen( { width: '100%' } );
 		$("#IdSaveNewMatirial").off('click').on('click' , function(){
 
 			$.ajax({
@@ -208,7 +220,7 @@ function LoadMainTableActionEdit(MatiralsJson ,  Masters , Raws ){
 		}
 
 
-		$("#EditRawSelect,#EditMasterSelect").chosen( { width: '100%' } );
+		$(".MychosenSelect").chosen( { width: '100%' } );
 		$("#SaveEditedMatirial").off('click').on('click' , function(){
 			$.ajax({
 				type : "GET",
@@ -304,18 +316,14 @@ function LoadProductionTable(PJson , Raws , Masters){
 			if (Raws)
 			{
 				delimiter="";
-				for (i in InstancesList[x].Raw) {
-					RawStr+=delimiter + InstancesList[x].Raw[i].MaterialName + '(' + InstancesList[x].Raw[i].MaterialSN + ')';
-					delimiter=",";
-				}
+				for (i in InstancesList[x].Raw) 
+					RawStr+='<span class="btn-info  btn-xs">' + InstancesList[x].Raw[i].MaterialName + '(' + InstancesList[x].Raw[i].MaterialSN  + ')</span>';
 			}
 			if (Masters)
 			{
 				delimiter="";
-				for (i in InstancesList[x].Master) {
-					MasterStr+=delimiter +  InstancesList[x].Master[i].MaterialName + '(' + InstancesList[x].Master[i].MaterialSN + ')';
-					delimiter=",";
-				}
+				for (i in InstancesList[x].Master) 
+					MasterStr +='<span class="btn-info  btn-xs">' + InstancesList[x].Master[i].MaterialName + '(' + InstancesList[x].Master[i].MaterialSN  + ')</span>';
 			}
 
 			txt += InstancesList[x].SerialNumber;
@@ -357,18 +365,56 @@ function LoadProductionTable(PJson , Raws , Masters){
 function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){  
 
 	$(".mybtn-new").click(function(){
+		LoadProdactionTableAction(MatiralsJson , Masters , Raws , "New");
+
+	})
+}
+
+function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){  
+	$(".mybtn-edit").click(function(){
+		LoadProdactionTableAction(PJson , Masters , Raws , "Edit");
+		var OldName = $(this).parentsUntil("tr").parent().find("td:eq(0)").text();
+		var InstancesList = PJson.InstancesList;
+                for (x in InstancesList) {
+			if (InstancesList[x].SerialNumber == OldName)
+			{
+				var arr=[];
+				for (i in InstancesList[x].Raw) 
+				{
+					var SelectedInstance = InstancesList[x].Raw[i].MaterialName + '(' + InstancesList[x].Raw[i].MaterialSN  + ')';
+					arr.push(SelectedInstance);
+					var elems = $('#EditRawSelect[name="' + SelectedInstance + '"]')
+					console.log(elems);
+					elems.siblings().prop('disabled', true);
+
+				}
+				console.log("arr=" + arr);
+				//$(":disabled").siblings().prop('disabled', true);
+
+					
+
+				$('#EditRawSelect').val(arr).trigger('chosen:updated');
+			}
+		}
+		$('#EditRawSelect').trigger('chosen:updated');
+
+	})
+
+}
+
+function LoadProdactionTableAction(MatiralsJson ,  Masters , Raws  , Prefix){  
 		var RecipeOptionMaster = MatiralsJson.RecipeOptionMaster;
 		var RecipeOptionRaw = MatiralsJson.RecipeOptionRaw;
 		var RawOptions = MatiralsJson.RawOptions;
 		var OptionList =''; 
 		var MatiralName = $("#MainDiv").attr("data-MatiralName");
-		$("#NewMatiralHeading").text('New instance of '+ MatiralName);
-		$("#NewMatiralName").val(MatiralsJson.Candidate);
-		$("#NewMatLabel").text("Serial Id");
+		$("#" + Prefix + "MatiralHeading").text('New instance of '+ MatiralName);
+		$("#" + Prefix + "MatiralName").val(MatiralsJson.Candidate);
+		$("#" + Prefix + "MatLabel").text("Serial Id");
 
                 if (Masters) {
-			$("#NewMasterDiv").removeClass('hidden');
-			$("#NewMasterSelect").attr("data-placeholder","Select Master Instances");
+			$("#" + Prefix + "MasterDiv").removeClass('hidden');
+			$("#" + Prefix + "MasterSelect").attr("data-placeholder","Select Master Instances");
 			var SelectStr='';
 			for (ROM in RecipeOptionMaster) {
 				SelectStr+= '<optgroup label=' + RecipeOptionMaster[ROM].MatiralName + '>';
@@ -379,11 +425,11 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 				}
 				SelectStr+= '</optgroup>';
 			}
-			$("#NewMasterSelect").html(SelectStr);
-			$("#NewMasterSelect").trigger("chosen:updated");
+			$("#" + Prefix + "MasterSelect").html(SelectStr);
+			$("#" + Prefix + "MasterSelect").trigger("chosen:updated");
 		}
 		if (Raws) {
-			$("#NewRawDiv").removeClass('hidden');
+			$("#" + Prefix + "RawDiv").removeClass('hidden');
 			var SelectStr='';
 			for (ROR in RecipeOptionRaw) {
 				SelectStr+='<optgroup label=' + RecipeOptionRaw[ROR].MatiralName + '>';
@@ -394,29 +440,30 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 				}
 				SelectStr+= '</optgroup>';
 			}
-			$("#NewRawSelect").html(SelectStr);
-			$("#NewRawSelect").trigger("chosen:updated");
+			$("#" + Prefix + "RawSelect").html(SelectStr);
+			$("#" + Prefix + "RawSelect").trigger("chosen:updated");
 		}
 
-		$("#NewSize").removeClass('hidden');
+		$("#" + Prefix + "Size").removeClass('hidden');
 		var SizeHtml='<label class="control-label col-sm-2" >Quantity :</label>';
 		SizeHtml+= '<div class="col-sm-10 container" >';
 		SizeHtml+= '<input type="number" class="form-control" id="NewMatiralSize" placeholder="Select Quantity" name="NewQuantityInput"></div>';
-		$("#NewSize").html(SizeHtml);
+		$("#" + Prefix + "Size").html(SizeHtml);
 
-		$("#NewSizeType").removeClass('hidden');
+		$("#" + Prefix + "SizeType").removeClass('hidden');
 		SizeHtml='<label class="control-label col-sm-2" >Units:</label>';
 		SizeHtml+= '<div class="col-sm-10 container" ><select class="form-control">';
 		SizeHtml+= '<option selected value="1"> Gram </option><option value="2"> Liter </option> </select></div>';
-		$("#NewSizeType").html(SizeHtml);
+		$("#" + Prefix + "SizeType").html(SizeHtml);
 
 
 
 
-		$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").chosen( { width: '100%' } );
+		$(".MychosenSelect").chosen( { width: '100%' } );
 	
-	})
 }
+
+
 
 function OptgroupBehavior()
 {
