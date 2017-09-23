@@ -249,7 +249,7 @@ function LoadMainTableActionEdit(MatiralsJson ,  Masters , Raws ){
 }
 
 function LoadFormulationGroupType(MatiralsJson , Prefix){  
-	var SelectionDivHtml = '<label class="control-label col-sm-2" >Type:</label><div class="col-sm-10" ><select class="form-control" id="' + Prefix+ 'GroupsTypeSelect"> </select></div>';
+	var SelectionDivHtml = '<label class="control-label col-sm-3" >Type:</label><div class="col-sm-9" ><select class="form-control" id="' + Prefix+ 'GroupsTypeSelect"> </select></div>';
 	var GroupType = MatiralsJson.GroupType;
 	var CurrentGroupType = $(this).parentsUntil("tr").parent().find("td:eq(1)").text();
 	var OptionList =''; 
@@ -389,6 +389,17 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 
 				}
 				console.log("arr=" + arr);
+				$('#EditRawSelect').val(arr).trigger('chosen:updated');
+				console.log($("select optgroup option:enabled"));
+
+				$(':disabled').each(function() {
+					var cb = $(this);
+					console.log('disabled='+cb);
+				});
+
+				//$('#EditRawSelect').has('option:disabled').css('background-color', '#FF0000')
+				//$(':option:disabled').closest("optgroup").css('background-color', '#FF0000');
+
 				//$(":disabled").siblings().prop('disabled', true);
 
 					
@@ -445,14 +456,14 @@ function LoadProdactionTableAction(MatiralsJson ,  Masters , Raws  , Prefix){
 		}
 
 		$("#" + Prefix + "Size").removeClass('hidden');
-		var SizeHtml='<label class="control-label col-sm-2" >Quantity :</label>';
-		SizeHtml+= '<div class="col-sm-10 container" >';
+		var SizeHtml='<label class="control-label col-sm-3" >Quantity :</label>';
+		SizeHtml+= '<div class="col-sm-9 container" >';
 		SizeHtml+= '<input type="number" class="form-control" id="NewMatiralSize" placeholder="Select Quantity" name="NewQuantityInput"></div>';
 		$("#" + Prefix + "Size").html(SizeHtml);
 
 		$("#" + Prefix + "SizeType").removeClass('hidden');
-		SizeHtml='<label class="control-label col-sm-2" >Units:</label>';
-		SizeHtml+= '<div class="col-sm-10 container" ><select class="form-control">';
+		SizeHtml='<label class="control-label col-sm-3" >Units:</label>';
+		SizeHtml+= '<div class="col-sm-9 container" ><select class="form-control">';
 		SizeHtml+= '<option selected value="1"> Gram </option><option value="2"> Liter </option> </select></div>';
 		$("#" + Prefix + "SizeType").html(SizeHtml);
 
