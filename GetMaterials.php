@@ -13,7 +13,7 @@ $Matirals->MatList=[];
 mysqli_select_db($con,"ChemistryTest");
 
 if(!empty($_GET["GroupType"]))
-  $sql="SELECT A.*,C.GroupType from Materials as A , FormulationNameToGroup as B , FormulationGroup as C where A.Type=\"$SBMatiralType\" and A.Name=B.Name and B.Id=C.Id and Available=1";
+  $sql="SELECT A.*,C.GroupType,C.Id from Materials as A , FormulationNameToGroup as B , FormulationGroup as C where A.Type=\"$SBMatiralType\" and A.Name=B.Name and B.Id=C.Id and Available=1";
 else
   $sql="SELECT A.* from Materials as A  where A.Type=\"$SBMatiralType\" and Available=1";
 $result = mysqli_query($con,$sql);
