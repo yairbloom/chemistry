@@ -117,7 +117,7 @@ if ($MatiralType === 'Formulation') {
 	}
 
 	$SERIAL_PREF = $ProjectId.substr(date('Y'),-1).date("W",strtotime('+1 day')).date("N",strtotime('+1 day'))."_";
-	$sql="SELECT count(*)+1 from ProductionMaterials where Name=\"".$Material."\" and SerialNumber like \"".$SERIAL_PREF."%\"";
+	$sql="SELECT count(*)+1 from ProductionMaterials where Name=\"".$MatiralName."\" and SerialNumber like \"".$SERIAL_PREF."%\"";
 	$result = mysqli_query($con,$sql);
 	if ($row = mysqli_fetch_array($result , MYSQLI_NUM)){   
 		$ProductionList->Candidate=$SERIAL_PREF.$row[0];

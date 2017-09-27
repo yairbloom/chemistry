@@ -55,6 +55,7 @@ $(document).ready(function(){
             data: {SBMatiralType:"Formulation" , GroupType:"yes" , Master:"yes" , Raw:"yes" },
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
+			     GeneralEvents();
 		             LoadMainTable(MatiralsJson , true ,true , true );
 			     LoadFormulationGroupType(MatiralsJson , "New");
 			     LoadMainTableActionNew(MatiralsJson , true , true);

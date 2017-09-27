@@ -36,7 +36,6 @@ $result = mysqli_query($con,$sql);
 
 if ($Type == "Formulation") {
   $sql="INSERT INTO FormulationNameToGroup (Name,Id) VALUES('".$Name."',".$groupTypeName.")";
-  echo $sql;
   $result = mysqli_query($con,$sql);
 }
 

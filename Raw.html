@@ -53,6 +53,7 @@ $(document).ready(function(){
             url : "GetMaterials.php?SBMatiralType=Raw",
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
+			GeneralEvents();
 			LoadMainTable(MatiralsJson , false , false , false);
 			LoadMainTableActionNew(MatiralsJson , false , false , false);
 			LoadMainTableActionEdit(MatiralsJson , false , false , false);

@@ -1,3 +1,21 @@
+function GeneralEvents()
+{
+	$('.PreventSpecialChars').bind('keypress', function(e) {
+		var code = e.which;
+		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) || code == 32){//space bar
+			e.preventDefault();
+		}
+	});
+	$('.PreventSpecialCharsAllowSpace').bind('keypress', function(e) {
+		var code = e.which;
+		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) && code !=32){//space bar
+			e.preventDefault();
+		}
+	});
+
+
+}
+
 function LoadMainTable(MatiralsJson , FType , Masters , Raws ){  
   var MatList = MatiralsJson.MatList;
 	var x ;
@@ -185,6 +203,7 @@ function LoadMainTableActionNew(MatiralsJson ,  Masters , Raws ){
 function LoadMainTableActionEdit(MatiralsJson ,  Masters , Raws ){  
 
 	$(".mybtn-edit").click(function(){
+	
 		var RawOptions = MatiralsJson.RawOptions;
 		var MasterOptions = MatiralsJson.MasterOptions;
 		var index = $(this).parentsUntil("tr").parent().attr('data-index');
@@ -378,11 +397,13 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 			$("#NewMasterSelect").attr("data-placeholder","Select Master Instances");
 			var SelectStr='';
 			for (ROM in RecipeOptionMaster) {
-				SelectStr+= '<optgroup label=' + RecipeOptionMaster[ROM].MatiralName + '>';
+				var MasterMatiralName=(RecipeOptionMaster[ROM].MatiralName).replace(/\s+/, "") ;
+				SelectStr+='<optgroup label=' + MasterMatiralName + ' value="' + MasterMatiralName + '">';
 				for (Ins in RecipeOptionMaster[ROM].Instances) 
 				{
-					var OptionName = '<option>'+ RecipeOptionMaster[ROM].MatiralName + '(' + RecipeOptionMaster[ROM].Instances[Ins] + ')</option>';
-					SelectStr+= OptionName.replace(/\s+/, "");
+					var InsName=(RecipeOptionMaster[ROM].Instances[Ins]).replace(/\s+/, "") ;
+					var OptionName = '<option value="' + InsName + '">'+ MasterMatiralName + '(' +InsName + ')</option>';
+					SelectStr+= OptionName;
 				}
 				SelectStr+= '</optgroup>';
 			}
@@ -393,11 +414,13 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 			$("#NewRawDiv").removeClass('hidden');
 			var SelectStr='';
 			for (ROR in RecipeOptionRaw) {
-				SelectStr+='<optgroup label=' + RecipeOptionRaw[ROR].MatiralName + '>';
+				var RawMatiralName=(RecipeOptionRaw[ROR].MatiralName).replace(/\s+/, "") ;
+				SelectStr+='<optgroup label=' + RawMatiralName + ' value="' + RawMatiralName + '">';
 				for (Ins in RecipeOptionRaw[ROR].Instances) 
 				{
-					var OptionName = '<option>'+ RecipeOptionRaw[ROR].MatiralName + '(' +RecipeOptionRaw[ROR].Instances[Ins] + ')</option>';
-					SelectStr+= OptionName.replace(/\s+/, "") ;
+					var InsName=(RecipeOptionRaw[ROR].Instances[Ins]).replace(/\s+/, "") ;
+					var OptionName = '<option value="' + InsName + '">'+ RawMatiralName + '(' +InsName + ')</option>';
+					SelectStr+= OptionName;
 				}
 				SelectStr+= '</optgroup>';
 			}
@@ -408,29 +431,36 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 		$("#NewSize").removeClass('hidden');
 		var SizeHtml='<label class="control-label col-sm-3" >Quantity :</label>';
 		SizeHtml+= '<div class="col-sm-9 container" >';
-		SizeHtml+= '<input type="number" class="form-control" id="NewMatiralSize" placeholder="Select Quantity" name="NewQuantityInput"></div>';
+		SizeHtml+= '<input type="number" min="0" class="form-control" id="NewInstanceSize" placeholder="Select Quantity" name="NewQuantityInput"></div>';
 		$("#NewSize").html(SizeHtml);
 
 		$("#NewSizeType").removeClass('hidden');
 		SizeHtml='<label class="control-label col-sm-3" >Units:</label>';
-		SizeHtml+= '<div class="col-sm-9 container" ><select class="form-control">';
+		SizeHtml+= '<div class="col-sm-9 container" ><select id="NewSizeSelect" class="form-control">';
 		SizeHtml+= '<option selected value="1"> Gram </option><option value="2"> Liter </option> </select></div>';
 		$("#NewSizeType").html(SizeHtml);
 
 		$(".MychosenSelect").chosen( { width: '100%' } );
 		$("#IdSaveNewMatirial").off('click').on('click' , function(){
-                        console.log('New instance of '+ MatiralName + " :" + $("#NewMatiralName").val());                 
-			return;
+			var SelectedRawInstances = [];
+			var SelectedMasterInstances = [];
+			$("#NewRawSelect option:selected").each(function(i){SelectedRawInstances[i] = { "InstanceName" : $(this).val() , "MatiralName" : $(this).parent().attr('label') };})
+			$("#NewMasterSelect option:selected").each(function(i){SelectedMasterInstances[i] = { "InstanceName" : $(this).val() , "MatiralName" : $(this).parent().attr('label') };})
+
+
+
 			$.ajax({
 				type : "GET",
-				url : "SaveNewMatiral.php",
-				data: {Name: $("#NewMatiralName").val(), 
+				url : "SaveNewInstance.php",
+				data: {MatiralName: MatiralName,
+					InstanceName: $("#NewMatiralName").val(), 
 					Comment: $("#NewMatiralComments").val(), 
-					MastersList: $("#NewMasterSelect").val() , 
-					RawsList: $("#NewRawSelect").val() , 
-					GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
-					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
+					SelectedRawInstances: JSON.stringify(SelectedRawInstances),
+					SelectedMasterInstances: JSON.stringify(SelectedMasterInstances),
+					Size: $("#NewInstanceSize").val(),
+					SizeType: $("#NewSizeSelect").val()},
 				success : function(response) {
+					return;
 					setTimeout(function()
 						{
 							location.reload();  //Refresh page

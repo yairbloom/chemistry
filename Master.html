@@ -52,6 +52,7 @@ $(document).ready(function(){
             url : "GetMaterials.php?SBMatiralType=Master&Raw=yes",
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
+			GeneralEvents();
 			LoadMainTable(MatiralsJson , false , false , true);
 			LoadMainTableActionNew(MatiralsJson ,  false , true);
 			LoadMainTableActionEdit(MatiralsJson  , false , true);
