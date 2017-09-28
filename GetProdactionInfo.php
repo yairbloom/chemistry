@@ -26,7 +26,7 @@ foreach ($outp as $value)
 {
 	if(!empty($_GET["Raw"]))
 	{
-		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Raw'",$value['SerialNumber']);
+		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Raw' and B.Material1='%s'",$value['SerialNumber'],$MatiralName);
 		$resultRaw = mysqli_query($con,$sql);
 		$outpRaw = array();
 		$outpRaw = $resultRaw->fetch_all(MYSQLI_ASSOC);
@@ -41,7 +41,7 @@ foreach ($outp as $value)
 
 	if(!empty($_GET["Master"]))
 	{
-		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Master'",$value['SerialNumber']);
+		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Master' and B.Material1='%s'",$value['SerialNumber'] , $MatiralName);
 		$resultMaster = mysqli_query($con,$sql);
 		$outpMaster = array();
 		$outpMaster = $resultMaster->fetch_all(MYSQLI_ASSOC);

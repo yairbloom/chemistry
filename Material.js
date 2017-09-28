@@ -2,13 +2,14 @@ function GeneralEvents()
 {
 	$('.PreventSpecialChars').bind('keypress', function(e) {
 		var code = e.which;
-		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) || code == 32){//space bar
+		console.log(code);
+		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) && code !=95){//underscore
 			e.preventDefault();
 		}
 	});
 	$('.PreventSpecialCharsAllowSpace').bind('keypress', function(e) {
 		var code = e.which;
-		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) && code !=32){//space bar
+		if (!((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57)) && code !=95 && code !=32){//space bar
 			e.preventDefault();
 		}
 	});
@@ -402,7 +403,7 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 				for (Ins in RecipeOptionMaster[ROM].Instances) 
 				{
 					var InsName=(RecipeOptionMaster[ROM].Instances[Ins]).replace(/\s+/, "") ;
-					var OptionName = '<option value="' + InsName + '">'+ MasterMatiralName + '(' +InsName + ')</option>';
+					var OptionName = '<option data-value="' + InsName + '">'+ MasterMatiralName + '(' +InsName + ')</option>';
 					SelectStr+= OptionName;
 				}
 				SelectStr+= '</optgroup>';
@@ -419,7 +420,7 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 				for (Ins in RecipeOptionRaw[ROR].Instances) 
 				{
 					var InsName=(RecipeOptionRaw[ROR].Instances[Ins]).replace(/\s+/, "") ;
-					var OptionName = '<option value="' + InsName + '">'+ RawMatiralName + '(' +InsName + ')</option>';
+					var OptionName = '<option data-value="' + InsName + '">'+ RawMatiralName + '(' +InsName + ')</option>';
 					SelectStr+= OptionName;
 				}
 				SelectStr+= '</optgroup>';
@@ -444,8 +445,8 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 		$("#IdSaveNewMatirial").off('click').on('click' , function(){
 			var SelectedRawInstances = [];
 			var SelectedMasterInstances = [];
-			$("#NewRawSelect option:selected").each(function(i){SelectedRawInstances[i] = { "InstanceName" : $(this).val() , "MatiralName" : $(this).parent().attr('label') };})
-			$("#NewMasterSelect option:selected").each(function(i){SelectedMasterInstances[i] = { "InstanceName" : $(this).val() , "MatiralName" : $(this).parent().attr('label') };})
+			$("#NewRawSelect option:selected").each(function(i){SelectedRawInstances[i] = { "InstanceName" : $(this).attr('data-value') , "MatiralName" : $(this).parent().attr('label') };})
+			$("#NewMasterSelect option:selected").each(function(i){SelectedMasterInstances[i] = { "InstanceName" : $(this).attr('data-value'), "MatiralName" : $(this).parent().attr('label') };})
 
 
 
@@ -460,10 +461,10 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 					Size: $("#NewInstanceSize").val(),
 					SizeType: $("#NewSizeSelect").val()},
 				success : function(response) {
-					return;
 					setTimeout(function()
 						{
-							location.reload();  //Refresh page
+							$("#mytable").load("Production.html");
+							//location.reload();  //Refresh page
 						}, 1000);
 				}
 			});
@@ -491,17 +492,6 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 		var RawOptions = PJson.RawOptions;
 		var OptionList =''; 
 		var MatiralName = $("#MainDiv").attr("data-MatiralName");
-		var QuantityColumnIndex = 1;
-		var CommentColumnIndex = 2;
-		if (Masters) {
-			QuantityColumnIndex++;
-			CommentColumnIndex++;
-		}
-		if (Raws) {
-			QuantityColumnIndex++;
-			CommentColumnIndex++;
-		}
-
 		var index = $(this).parentsUntil("tr").parent().attr('data-index');
 
 		var CurrentInstance = PJson.InstancesList[index];
@@ -518,20 +508,22 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 			$("#EditMasterSelect").attr("data-placeholder","Select Master Instances");
 			var SelectStr='';
 			for (ROM in RecipeOptionMaster) {
-				SelectStr+= '<optgroup label=' + RecipeOptionMaster[ROM].MatiralName + '>';
+				var MasterMatiralName=(RecipeOptionMaster[ROM].MatiralName).replace(/\s+/, "") ;
+				SelectStr+='<optgroup label=' + MasterMatiralName + ' value="' + MasterMatiralName + '">';
 				var CurrentMasterItem = GetCurrentItemByName(CurrentInstance.Master , RecipeOptionMaster[ROM].MatiralName);
 				for (Ins in RecipeOptionMaster[ROM].Instances) 
 				{
-					var Ins = RecipeOptionMaster[ROM].Instances[Ins].replace(/\s+/, "");
-					var OptionName = RecipeOptionMaster[ROM].MatiralName + '(' +Ins + ')';
+					var InsName = RecipeOptionMaster[ROM].Instances[Ins].replace(/\s+/, "");
+					var OptionName = MasterMatiralName + '(' +Ins + ')';
+
 					if (CurrentMasterItem) {
-						if (CurrentMasterItem.MaterialSN == Ins)
-							SelectStr+= '<option selected>' + OptionName + '</option>';
+						if (CurrentMasterItem.MaterialSN == InsName)
+							SelectStr+= '<option selected data-value=' + InsName + '>' + OptionName + '</option>';
 					        else
-							SelectStr+= '<option disabled=/"disabled/">' + OptionName + '</option>';
+							SelectStr+= '<option disabled=/"disabled/" data-value=' + InsName + '>' + OptionName + '</option>';
 					}
 					else
-						SelectStr+= '<option>' + OptionName + '</option>';
+						SelectStr+= '<option data-value=' + InsName + '>' + OptionName + '</option>';
 				}
 				SelectStr+= '</optgroup>';
 			}
@@ -542,21 +534,23 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 			$("#EditRawDiv").removeClass('hidden');
 			var SelectStr='';
 			for (ROR in RecipeOptionRaw) {
-				SelectStr+='<optgroup label=' + RecipeOptionRaw[ROR].MatiralName + '>';
-				var CurrentRawItem = GetCurrentItemByName(CurrentInstance.Raw , RecipeOptionRaw[ROR].MatiralName);
+				var RawMatiralName=(RecipeOptionRaw[ROR].MatiralName).replace(/\s+/, "") ;
+				SelectStr+='<optgroup label=' + RawMatiralName + ' value="' + RawMatiralName + '">';
+				var CurrentRawItem = GetCurrentItemByName(CurrentInstance.Raw , RawMatiralName);
 				
 				for (Ins in RecipeOptionRaw[ROR].Instances) 
 				{
-					var Ins = RecipeOptionRaw[ROR].Instances[Ins].replace(/\s+/, "");
-					var OptionName = RecipeOptionRaw[ROR].MatiralName + '(' +Ins + ')';
+					var InsName = RecipeOptionRaw[ROR].Instances[Ins].replace(/\s+/, "");
+					var OptionName = RecipeOptionRaw[ROR].MatiralName + '(' +InsName + ')';
+
 					if (CurrentRawItem) {
-						if (CurrentRawItem.MaterialSN == Ins)
-							SelectStr+= '<option selected>' + OptionName + '</option>';
+						if (CurrentRawItem.MaterialSN == InsName)
+							SelectStr+= '<option selected value=' + InsName +'>' + OptionName + '</option>';
 					        else
-							SelectStr+= '<option disabled=/"disabled/">' + OptionName + '</option>';
+							SelectStr+= '<option disabled=/"disabled/" value=' + InsName +'>' + OptionName + '</option>';
 					}
 					else
-						SelectStr+= '<option>' + OptionName + '</option>';
+						SelectStr+= '<option value=' + InsName +'>' + OptionName + '</option>';
 				}
 				SelectStr+= '</optgroup>';
 			}
@@ -567,12 +561,12 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 		$("#EditSize").removeClass('hidden');
 		var SizeHtml='<label class="control-label col-sm-3" >Quantity :</label>';
 		SizeHtml+= '<div class="col-sm-9 container" >';
-		SizeHtml+= '<input type="number" class="form-control" id="EditMatiralSize" placeholder="Select Quantity" name="EditQuantityInput" value=' + OldQuantity + '></div>';
+		SizeHtml+= '<input type="number" class="form-control" id="UpdateQuantity" placeholder="Select Quantity" name="EditQuantityInput" value=' + OldQuantity + '></div>';
 		$("#EditSize").html(SizeHtml);
 
 		$("#EditSizeType").removeClass('hidden');
 		SizeHtml='<label class="control-label col-sm-3" >Units:</label>';
-		SizeHtml+= '<div class="col-sm-9 container" ><select class="form-control">';
+		SizeHtml+= '<div class="col-sm-9 container" ><select class="form-control" id="UpdateQuantityType">';
 		SizeHtml+= '<option value="1"'
 		if (OldQuantityType == 1) 
 			SizeHtml+= 'selected';
@@ -588,6 +582,37 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 
 
 		$(".MychosenSelect").chosen( { width: '100%' } );
+		$("#SaveEditedMatirial").off('click').on('click' , function(){
+			var SelectedRawInstances = [];
+			var SelectedMasterInstances = [];
+			$("#EditRawSelect option:selected").each(function(i){SelectedRawInstances[i] = { "InstanceName" : $(this).attr('data-value') , "MatiralName" : $(this).parent().attr('label') };})
+			$("#EditMasterSelect option:selected").each(function(i){SelectedMasterInstances[i] = { "InstanceName" : $(this).attr('data-value') , "MatiralName" : $(this).parent().attr('label') };})
+
+
+
+			$.ajax({
+				type : "GET",
+				url : "UpdateInstance.php",
+				data: {MatiralName: MatiralName,
+					OldInstanceName:CurrentInstance.SerialNumber,
+					InstanceName: $("#EditMatiralName").val(), 
+					Comment: $("#EditMatiralComments").val(), 
+					SelectedRawInstances: JSON.stringify(SelectedRawInstances),
+					SelectedMasterInstances: JSON.stringify(SelectedMasterInstances),
+					Size: $("#UpdateQuantity").val(),
+					SizeType: $("#UpdateQuantityType").val()},
+				success : function(response) {
+					setTimeout(function()
+						{
+							$("#mytable").load("Production.html");
+						}, 1000);
+				}
+			});
+
+
+
+		});
+
 		EditSelectBehavior();
               
 	})
@@ -596,9 +621,10 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 
 function OptgroupBehavior()
 {
+
+
 	$("#EditRawSelect,#EditMasterSelect,#NewRawSelect,#NewMasterSelect").off('change').on('change', function (e , params){
-		var count = $('option:selected',this).length;
-		var Optcount = $('optgroup',this).length;
+		console.log(params);
 		var ChangeText = '';
 		var Disable=false;
 		if (params.selected) 
@@ -610,8 +636,9 @@ function OptgroupBehavior()
 			ChangeText=params.deselected;
 
 		var TheOption = $( "option" ).filter( function () {
-			return $( this ).text().indexOf( ChangeText ) >= 0;
+			return $( this ).val().indexOf( ChangeText ) >= 0;
 		}).first();
+		//console.log($( this ).find(ChangeText).val());
 
 		TheOption.siblings().prop('disabled', Disable);
 		$(this).trigger("chosen:updated");
