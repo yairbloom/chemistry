@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html>
-<body>
-
 <?php
 $Name = $_GET['MatiralName'];
 
@@ -9,7 +5,10 @@ $Name = $_GET['MatiralName'];
 
 $con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
 if (!$con) {
-    die('Could not connect: ' . mysqli_error($con));
+	$response_array->status = 'fail';
+	$response_array->message = 'Error: database connection failure';   /* add custom message */ 
+	echo json_encode($response_array);
+	return;
 }
 
 mysqli_select_db($con,"ChemistryTest");

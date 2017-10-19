@@ -135,10 +135,18 @@ function LoadMainTableActionDelete(){
 				url : "DeleteMatiral.php",
 				data: {MatiralName: $("#DeleteMatiral").attr("data-MatiralName") },
 				success : function(response) {
-					setTimeout(function()
-						{
-							location.reload();  //Refresh page
-						}, 1000);
+					var Json = JSON.parse(response);
+					if (Json.status == "success") {
+						setTimeout(function()
+							{
+								location.reload();  //Refresh page
+							}, 1000);
+					}
+					else {
+						$("#ErrorAlertSpan").text("  " + Json.message);
+						$("#ErrorAlert").modal();
+
+					}
 				}
 			});
 
@@ -185,10 +193,18 @@ function LoadMainTableActionNew(MatiralsJson ,  Masters , Raws ){
 					GroupTypeName: $("#NewGroupsTypeSelect").val()  , 
 					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
 				success : function(response) {
-					setTimeout(function()
-						{
-							location.reload();  //Refresh page
-						}, 1000);
+					var Json = JSON.parse(response);
+					if (Json.status == "success") {
+						setTimeout(function()
+							{
+								location.reload();  //Refresh page
+							}, 1000);
+					}
+					else {
+						$("#ErrorAlertSpan").text("  " + Json.message);
+						$("#ErrorAlert").modal();
+
+				        }
 				}
 			});
 
