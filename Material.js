@@ -275,13 +275,21 @@ function LoadMainTableActionEdit(MatiralsJson ,  Masters , Raws ){
 					Comment: $("#EditMatiralComments").val(), 
 					MastersList: $("#EditMasterSelect").val() , 
 					RawsList: $("#EditRawSelect").val() , 
-					GroupTypeName: $("#EditGroupsTypeSelect").val()  , 
+					GroupTypeName: $("#EditGroupsTypeSelect").val(),
 					MatiralType : $("#MenuContent").attr("data-Matiral-type")},
-				success : function(response) {
-					setTimeout(function()
-						{
-							location.reload();  //Refresh page
-						}, 1000);
+			success : function(response) {
+					var Json = JSON.parse(response);
+					if (Json.status == "success") {
+						setTimeout(function()
+							{
+								location.reload();  //Refresh page
+							}, 1000);
+					}
+					else {
+						$("#ErrorAlertSpan").text("  " + Json.message);
+						$("#ErrorAlert").modal();
+
+					}
 				}
 			});
 
@@ -480,7 +488,6 @@ function LoadProdactionTableActionNew(MatiralsJson ,  Masters , Raws ){
 					setTimeout(function()
 						{
 							$("#mytable").load("Production.html");
-							//location.reload();  //Refresh page
 						}, 1000);
 				}
 			});
@@ -577,7 +584,7 @@ function LoadProdactionTableActionEdit(PJson ,  Masters , Raws ){
 		$("#EditSize").removeClass('hidden');
 		var SizeHtml='<label class="control-label col-sm-3" >Quantity :</label>';
 		SizeHtml+= '<div class="col-sm-9 container" >';
-		SizeHtml+= '<input type="number" class="form-control" id="UpdateQuantity" placeholder="Select Quantity" name="EditQuantityInput" value=' + OldQuantity + '></div>';
+		SizeHtml+= '<input type="number" min="0" class="form-control" id="UpdateQuantity" placeholder="Select Quantity" name="EditQuantityInput" value=' + OldQuantity + '></div>';
 		$("#EditSize").html(SizeHtml);
 
 		$("#EditSizeType").removeClass('hidden');

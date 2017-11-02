@@ -1,16 +1,13 @@
 <?php
-// connect mysql server
-$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
-if (!$con) { 
-    die('Could not connect: ' . mysql_error()); 
-} 
 
+include 'PhpUtils.php';
+$con = GetConnection();
+if (!$con)
+	return;
 
 $SBMatiralType = $_GET['SBMatiralType'];
 $Matirals->MatList=[];
 
-// select database
-mysqli_select_db($con,"ChemistryTest");
 
 if(!empty($_GET["GroupType"]))
   $sql="SELECT A.*,C.GroupType,C.Id from Materials as A , FormulationNameToGroup as B , FormulationGroup as C where A.Type=\"$SBMatiralType\" and A.Name=B.Name and B.Id=C.Id and Available=1";
@@ -91,5 +88,6 @@ if(!empty($_GET["Raw"]))
 $FList =  json_encode($Matirals);
 echo $FList;
 
+mysqli_close($con);
 ?>
 

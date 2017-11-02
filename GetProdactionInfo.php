@@ -1,10 +1,4 @@
 <?php
-// connect mysql server
-$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
-if (!$con) { 
-    die('Could not connect: ' . mysql_error()); 
-} 
-
 
 $MatiralName = $_GET['MatiralName'];
 $MatiralType = $_GET['MatiralType']; 
@@ -15,44 +9,31 @@ $ProductionList->Candidate='1';
 $ProjectId=0;
 $Total=0;
 
-// select database
-mysqli_select_db($con,"ChemistryTest");
+include 'PhpUtils.php';
+$con = GetConnection();
+if (! $con)
+	return;
 
-$sql="SELECT SerialNumber,Comment,Quantity,QuantityType,LastModify from ProductionMaterials where Name='".$MatiralName."'";
+
+$sql="SELECT Id,SerialNumber,Comment,Quantity,QuantityType,LastModify from ProductionMaterials where Name='".$MatiralName."'";
 $result = mysqli_query($con,$sql);
-$outp = array();
-$outp = $result->fetch_all(MYSQLI_ASSOC);
-foreach ($outp as $value)
+$SnInfo = array();
+$SnInfo = $result->fetch_all(MYSQLI_ASSOC);
+foreach ($SnInfo as $value)
 {
-	if(!empty($_GET["Raw"]))
+	$sql="SELECT A.Name as MaterialName,A.SerialNumber as MaterialSN,D.Type FROM ProductionMaterials as A,ProductionRecipe as B,Materials as D ";
+	$sql= sprintf("%s where A.Id=B.Production2Id and B.Production1Id=%d and A.Name=D.Name",$sql , $value['Id']);
+	$ResultRecipe = mysqli_query($con,$sql);
+	$ResultRecipeItems = array();
+	$ResultRecipeItems = $ResultRecipe->fetch_all(MYSQLI_ASSOC);
+	$RawIndex=0;
+	$MasterIndex=0;
+	foreach ($ResultRecipeItems as $RecipeItem)
 	{
-		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Raw' and B.Material1='%s'",$value['SerialNumber'],$MatiralName);
-		$resultRaw = mysqli_query($con,$sql);
-		$outpRaw = array();
-		$outpRaw = $resultRaw->fetch_all(MYSQLI_ASSOC);
-		$value['Raw'] = [];
-		$index =0;
-		foreach ($outpRaw as $valueRaw)
-		{
-			$value['Raw'][$index] = $valueRaw;
-			$index++;
-		}
-	}
-
-	if(!empty($_GET["Master"]))
-	{
-		$sql=sprintf("select A.Material2SN as MaterialSN ,B.Material2 as MaterialName from ProductionRecipe as A,MaterialsRecipe as B, Materials as C where A.Material1SN='%s' and A.Id=B.Id and B.Material2=C.Name and C.Type='Master' and B.Material1='%s'",$value['SerialNumber'] , $MatiralName);
-		$resultMaster = mysqli_query($con,$sql);
-		$outpMaster = array();
-		$outpMaster = $resultMaster->fetch_all(MYSQLI_ASSOC);
-		$value['Master'] = [];
-		$index =0;
-		foreach ($outpMaster as $valueMaster)
-		{
-			$value['Master'][$index] = $valueMaster;
-			$index++;
-		}
-
+		if ($RecipeItem['Type'] == "Raw")
+			$value['Raw'][$RawIndex++] = $RecipeItem;
+		else if ($RecipeItem['Type'] == "Master")
+			$value['Master'][$MasterIndex++] = $RecipeItem;
 	}
 	array_push($ProductionList->InstancesList,$value);
 
@@ -136,6 +117,7 @@ else {
 
 
 mysqli_close($con);
+$ProductionList->status = 'success'; /* match error string in jquery if/else */ 
 echo json_encode($ProductionList );
 ?>
 

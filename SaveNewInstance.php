@@ -12,33 +12,28 @@ $Size = $_GET['Size'];
 $SizeType = $_GET['SizeType'];
 
 
-$con = mysqli_connect('localhost','chem','mistry','ChemistryTest');
-if (!$con) {
-    die('Could not connect: ' . mysqli_error($con));
-}
+include 'PhpUtils.php';
+$con = ConnectToDb();
+if (! $con)
+	return;
 
-mysqli_select_db($con,"ChemistryTest");
 $sql=sprintf("INSERT INTO ProductionMaterials (Name,SerialNumber,Comment,Quantity,QuantityType) VALUES('%s','%s','%s',%d,%d)",$MatiralName,  $InstanceName , $Comment , $Size , $SizeType);
-$result = mysqli_query($con,$sql);
-if (! $result)
-	echo("Errorcode: " . mysqli_errno($con));
+if ( !MysqliQuery($con,$sql)) 
+	return;
 
-foreach (json_decode($SelectedRawInstances) as $x)
+foreach (array_merge(json_decode($SelectedRawInstances) , json_decode($SelectedMasterInstances)) as $x)
 {
-	$SelectQuery = sprintf("SELECT Id,'%s','%s' from MaterialsRecipe where Material1='%s' and Material2='%s'",$InstanceName,$x->{'InstanceName'},$MatiralName,$x->{'MatiralName'});
-	$InsertSelectQuery=sprintf("INSERT INTO ProductionRecipe (Id , Material1SN , Material2SN) %s" , $SelectQuery);
-	$result = mysqli_query($con,$InsertSelectQuery);
-
-}
-foreach (json_decode($SelectedMasterInstances) as $x)
-{
-	$SelectQuery = sprintf("SELECT Id,'%s','%s' from MaterialsRecipe where Material1='%s' and Material2='%s'",$InstanceName,$x->{'InstanceName'},$MatiralName,$x->{'MatiralName'});
-	$InsertSelectQuery=sprintf("INSERT INTO ProductionRecipe (Id , Material1SN , Material2SN) %s" , $SelectQuery);
-	$result = mysqli_query($con,$InsertSelectQuery);
+	$SelectQuery1 = sprintf("SELECT Id from MaterialsRecipe where Material1='%s' and Material2='%s'",$MatiralName,$x->{'MatiralName'});
+	$SelectQuery2 = "SELECT MAX(Id) from ProductionMaterials";
+	$SelectQuery3 = sprintf("SELECT Id from ProductionMaterials where Name='%s' and SerialNumber='%s'",$x->{'MatiralName'} , $x->{'InstanceName'});
+	
+	$InsertSelectQuery=sprintf("INSERT INTO ProductionRecipe (Id , Production1Id , Production2Id) VALUES ((%s),(%s),(%s))" , $SelectQuery1,$SelectQuery2,$SelectQuery3);
+	if ( !MysqliQuery($con,$InsertSelectQuery)) 
+		return;
 
 }
 
-mysqli_close($con);
+MysqliEnd($con);
 
 ?>
 

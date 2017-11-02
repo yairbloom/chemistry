@@ -13,6 +13,12 @@ $(document).ready(function(){
             data: { MatiralName : MatiralName ,  MatiralType : MatiralType , Master:IsMasterListRequired , Raw:IsRawListRequired },
 		success : function(response) {
 			var MatiralsJson = JSON.parse(response);
+			if (MatiralsJson.status != "success") {
+				$("#ErrorAlertSpan").text("  " + MatiralsJson.message);
+				$("#ErrorAlert").modal();
+				return;
+			}
+
 			GeneralEvents();
 			LoadProductionTable(MatiralsJson , IsRawListRequired , IsMasterListRequired);
 			OptgroupBehavior();

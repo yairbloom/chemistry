@@ -30,16 +30,6 @@ CREATE TABLE `FormulationGroup` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `FormulationGroup`
---
-
-LOCK TABLES `FormulationGroup` WRITE;
-/*!40000 ALTER TABLE `FormulationGroup` DISABLE KEYS */;
-INSERT INTO `FormulationGroup` VALUES (1,'Zirconia Model'),(2,'Zirconia Support'),(3,'Stainless steel Model'),(4,'Stainless steel Support'),(5,'AP');
-/*!40000 ALTER TABLE `FormulationGroup` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `FormulationNameToGroup`
 --
 
@@ -49,19 +39,12 @@ DROP TABLE IF EXISTS `FormulationNameToGroup`;
 CREATE TABLE `FormulationNameToGroup` (
   `Name` varchar(40) NOT NULL,
   `Id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`Name`)
+  PRIMARY KEY (`Name`),
+  KEY `Id` (`Id`),
+  CONSTRAINT `FormulationNameToGroup_ibfk_1` FOREIGN KEY (`Id`) REFERENCES `FormulationGroup` (`Id`) ON UPDATE CASCADE,
+  CONSTRAINT `FormulationNameToGroup_ibfk_2` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `FormulationNameToGroup`
---
-
-LOCK TABLES `FormulationNameToGroup` WRITE;
-/*!40000 ALTER TABLE `FormulationNameToGroup` DISABLE KEYS */;
-INSERT INTO `FormulationNameToGroup` VALUES ('AP200',5),('AP201',5),('AP202',5),('EP2_100',1),('RS20',3),('RS35',3),('SG-60',4);
-/*!40000 ALTER TABLE `FormulationNameToGroup` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Materials`
@@ -75,19 +58,10 @@ CREATE TABLE `Materials` (
   `Comment` text,
   `Type` enum('Raw','Master','Formulation') DEFAULT NULL,
   `Available` int(1) DEFAULT NULL,
+  `LastModify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Materials`
---
-
-LOCK TABLES `Materials` WRITE;
-/*!40000 ALTER TABLE `Materials` DISABLE KEYS */;
-INSERT INTO `Materials` VALUES ('AMOH','\r\n  ','Raw',1),('AP200','2%','Formulation',1),('AP201','4% PVAc in PG:PC 95:5\r\n  ','Formulation',1),('AP202','4% PVAc, 1% PHT in PG','Formulation',1),('APS','  Please enter your comment here.\r\n  ','Raw',1),('Ax101_2','\r\n  ','Master',1),('BYK 190','40% W/W in water\r\n  ','Raw',1),('Byk190 60% DB dry','  Please enter your comment here.\r\n  ','Master',1),('DB','  Please enter your comment here.\r\n  ','Raw',1),('DEGBE','  Please enter your comment here.\r\n  ','Raw',1),('EG','  Please enter your comment here.\r\n  ','Raw',1),('EP2','\r\n  ','Raw',1),('EP2_100',' 2.5% EP2 in PG\r\n  ','Formulation',1),('EtOH','  Please enter your comment here.\r\n  ','Raw',1),('GC','  Please enter your comment here.\r\n  ','Raw',1),('H2O','  Please enter your comment here.\r\n  ','Raw',1),('JC 5%','f\r\n  ','Master',1),('JC581','\r\n  ','Raw',1),('O.A.','  Please enter your comment here.\r\n  ','Raw',1),('O.A. 5%','  Please enter your comment here.\r\n  ','Master',1),('PC','  Please enter your comment here.\r\n  ','Raw',1),('PG','  Please enter your comment here.\r\n  ','Raw',1),('PHT','  Please enter your comment here.\r\n  ','Raw',1),('PPH','  Please enter your comment here.\r\n  ','Raw',1),('PVAc','  Please enter your comment here.\r\n  ','Raw',1),('PVAc 10% in PG','10% PVAc in PG (wt%)\r\n  ','Master',1),('qwq','  Please enter your comment here.\r\n  ','Raw',1),('R710','  Please enter your comment here.\r\n  ','Raw',1),('RS-powder','  Please enter your comment here.\r\n  ','Raw',1),('RS20','  Please enter your comment here.\r\n  ','Formulation',1),('RS35','  Please enter your comment here.\r\n  ','Formulation',1),('SDS','  Please enter your comment here.\r\n  ','Raw',1),('SG-60','\r\n  ','Formulation',1),('TEOS','\r\n  ','Raw',1),('Zirconia','TZ-3YS-E\r\nTOSOH  ','Raw',1),('Zr7B','  Please enter your comment here.\r\n  ','Master',1);
-/*!40000 ALTER TABLE `Materials` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `MaterialsRecipe`
@@ -98,21 +72,15 @@ DROP TABLE IF EXISTS `MaterialsRecipe`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `MaterialsRecipe` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Material1` varchar(40) DEFAULT NULL,
-  `Material2` varchar(40) DEFAULT NULL,
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+  `Material1` varchar(40) NOT NULL,
+  `Material2` varchar(40) NOT NULL,
+  PRIMARY KEY (`Material1`,`Material2`),
+  KEY `Id` (`Id`),
+  KEY `Material2` (`Material2`),
+  CONSTRAINT `MaterialsRecipe_ibfk_1` FOREIGN KEY (`Material1`) REFERENCES `Materials` (`Name`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `MaterialsRecipe_ibfk_2` FOREIGN KEY (`Material2`) REFERENCES `Materials` (`Name`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `MaterialsRecipe`
---
-
-LOCK TABLES `MaterialsRecipe` WRITE;
-/*!40000 ALTER TABLE `MaterialsRecipe` DISABLE KEYS */;
-INSERT INTO `MaterialsRecipe` VALUES (1,'PVAc 10% in PG','PG'),(2,'PVAc 10% in PG','PVAc'),(3,'RS20','GC'),(4,'RS20','PC'),(5,'RS20','PG'),(6,'RS20','R710'),(7,'RS20','RS-powder'),(8,'RS35','PC'),(9,'RS35','PG'),(10,'RS35','PPH'),(11,'RS35','R710'),(12,'RS35','RS-powder'),(13,'Zr7B','Zirconia'),(14,'Zr7B','DEGBE'),(15,'Zr7B','BYK 190'),(16,'AP200','PC'),(17,'AP200','PVAc 10% in PG'),(18,'Byk190 60% DB dry','BYK 190'),(19,'Byk190 60% DB dry','DB'),(20,'Ax101_2','AMOH'),(21,'Ax101_2','DB'),(22,'Ax101_2','EG'),(23,'Ax101_2','EtOH'),(24,'Ax101_2','H2O'),(25,'Ax101_2','TEOS'),(26,'JC 5%','DB'),(27,'JC 5%','JC581'),(28,'SG-60','EG'),(29,'SG-60','DB'),(30,'SG-60','Ax101_2'),(31,'SG-60','Byk190 60% DB dry'),(32,'SG-60','O.A. 5%'),(33,'O.A. 5%','DB'),(34,'O.A. 5%','O.A.'),(35,'AP201','PC'),(36,'AP201','PG'),(37,'AP201','PVAc 10% in PG'),(38,'EP2_100','EP2'),(39,'EP2_100','PG'),(40,'EP2_100','EP2'),(41,'EP2_100','PG'),(42,'AP202','PG'),(43,'AP202','PHT'),(44,'AP202','PVAc 10% in PG');
-/*!40000 ALTER TABLE `MaterialsRecipe` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ProductionMaterials`
@@ -125,52 +93,15 @@ CREATE TABLE `ProductionMaterials` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(40) NOT NULL,
   `SerialNumber` varchar(16) NOT NULL DEFAULT '',
-  `Comment` text,
+  `Comment` char(255) NOT NULL DEFAULT '',
   `Quantity` float DEFAULT NULL,
   `QuantityType` int(1) DEFAULT NULL,
+  `LastModify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Id`),
   KEY `Name` (`Name`,`SerialNumber`),
-  CONSTRAINT `ProductionMaterials_ibfk_2` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+  CONSTRAINT `ProductionMaterials_ibfk_3` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProductionMaterials`
---
-
-LOCK TABLES `ProductionMaterials` WRITE;
-/*!40000 ALTER TABLE `ProductionMaterials` DISABLE KEYS */;
-INSERT INTO `ProductionMaterials` VALUES (1,'AMOH','      1',NULL,0,1),(2,'AP200','57195_1',NULL,0,1),(3,'AP201','57203_2',NULL,0,1),(4,'AP202','57203_3',NULL,0,1),(5,'Ax101_2','1',NULL,0,1),(6,'BYK 190',' 1',NULL,0,1),(7,'Byk190 60% DB dry','1',NULL,0,1),(8,'DB','      1',NULL,0,1),(9,'EG','      1',NULL,0,1),(10,'EP2','     1',NULL,0,1),(11,'EP2_100','57203_1',NULL,0,1),(12,'EtOH','    1',NULL,0,1),(13,'H2O','     1',NULL,0,1),(14,'O.A.','    1',NULL,0,1),(15,'O.A. 5%','1',NULL,0,1),(16,'PC','0     ',NULL,0,1),(17,'PG','      1',NULL,0,1),(18,'PHT','     1',NULL,0,1),(19,'PPH','     1',NULL,0,1),(20,'PVAc','    1',NULL,0,1),(21,'PVAc 10% in PG','1',NULL,0,1),(22,'R710','    1',NULL,0,1),(23,'RS-powder','       1',NULL,0,1),(24,'RS35','37195_1',NULL,0,1),(25,'SG-60','47195_1',NULL,0,1),(26,'TEOS','    1',NULL,0,1);
-/*!40000 ALTER TABLE `ProductionMaterials` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `ProductionMaterials_old`
---
-
-DROP TABLE IF EXISTS `ProductionMaterials_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ProductionMaterials_old` (
-  `Name` varchar(40) NOT NULL,
-  `SerialNumber` varchar(16) NOT NULL DEFAULT '',
-  `Comment` text,
-  `Quantity` float DEFAULT NULL,
-  `QuantityType` int(1) DEFAULT NULL,
-  PRIMARY KEY (`Name`,`SerialNumber`),
-  CONSTRAINT `ProductionMaterials_old_ibfk_1` FOREIGN KEY (`Name`) REFERENCES `Materials` (`Name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProductionMaterials_old`
---
-
-LOCK TABLES `ProductionMaterials_old` WRITE;
-/*!40000 ALTER TABLE `ProductionMaterials_old` DISABLE KEYS */;
-INSERT INTO `ProductionMaterials_old` VALUES ('AMOH','      1','    Please enter your comment here.\r\n     ',0,1),('AP200','57195_1',' Please enter your comment here.\r\n     ',0,1),('AP201','57203_2',' Please enter your comment here.\r\n     ',0,1),('AP202','57203_3',' Please enter your comment here.\r\n     ',0,1),('Ax101_2','1','     Please enter your comment here.\r\n     ',0,1),('BYK 190',' 1','    Please enter your comment here.\r\n     ',0,1),('Byk190 60% DB dry','1','   Please enter your comment here.\r\n     ',0,1),('DB','      1','    Please enter your comment here.\r\n     ',0,1),('EG','      1','    Please enter your comment here.\r\n     ',0,1),('EP2','     1','    Please enter your comment here.\r\n     ',0,1),('EP2_100','57203_1','       Please enter your comment here.\r\n     ',0,1),('EtOH','    1','    Please enter your comment here.\r\n     ',0,1),('H2O','     1','    Please enter your comment here.\r\n     ',0,1),('O.A.','    1','    Please enter your comment here.\r\n     ',0,1),('O.A. 5%','1','     Please enter your comment here.\r\n     ',0,1),('PC','0     ','     Please enter your comment here.\r\n     ',0,1),('PG','      1','    Please enter your comment here.\r\n     ',0,1),('PHT','     1','    Please enter your comment here.\r\n     ',0,1),('PPH','     1','    Please enter your comment here.\r\n     ',0,1),('PVAc','    1','    Please enter your comment here.\r\n     ',0,1),('PVAc 10% in PG','1','      Please enter your comment here.\r\n     ',0,1),('R710','    1','    Please enter your comment here.\r\n     ',0,1),('RS-powder','       1','    Please enter your comment here.\r\n     ',0,1),('RS35','37195_1','  Please enter your comment here.\r\n     ',0,1),('SG-60','47195_1','\r\n     ',0,1),('TEOS','    1','    Please enter your comment here.\r\n     ',0,1);
-/*!40000 ALTER TABLE `ProductionMaterials_old` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `ProductionRecipe`
@@ -181,21 +112,17 @@ DROP TABLE IF EXISTS `ProductionRecipe`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ProductionRecipe` (
   `Id` int(11) NOT NULL DEFAULT '0',
-  `Material1SN` varchar(16) NOT NULL DEFAULT '',
-  `Material2SN` varchar(16) NOT NULL DEFAULT '',
+  `Production1Id` int(11) NOT NULL DEFAULT '0',
+  `Production2Id` int(11) NOT NULL DEFAULT '0',
   `Available` int(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`Id`,`Material1SN`,`Material2SN`)
+  KEY `Production1Id` (`Production1Id`),
+  KEY `Production2Id` (`Production2Id`),
+  KEY `Id` (`Id`),
+  CONSTRAINT `ProductionRecipe_zzz_1` FOREIGN KEY (`Production1Id`) REFERENCES `ProductionMaterials` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ProductionRecipe_zzz_2` FOREIGN KEY (`Production2Id`) REFERENCES `ProductionMaterials` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `ProductionRecipe_zzz_3` FOREIGN KEY (`Id`) REFERENCES `MaterialsRecipe` (`Id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `ProductionRecipe`
---
-
-LOCK TABLES `ProductionRecipe` WRITE;
-/*!40000 ALTER TABLE `ProductionRecipe` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ProductionRecipe` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -206,4 +133,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-08-17 11:30:56
+-- Dump completed on 2017-11-02 11:24:48
